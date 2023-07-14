@@ -1,2 +1,2 @@
 # wordswithbots
-save information retrieved from varoius chatbots
+Save information retrieved from varoius chatbots
