@@ -1,0 +1,58 @@
+Sub CreateSlideDeck()
+    Dim pptApp As PowerPoint.Application
+    Dim pptPres As PowerPoint.Presentation
+    Dim pptSlide As PowerPoint.Slide
+    
+    ' Create a new PowerPoint presentation
+    Set pptApp = New PowerPoint.Application
+    Set pptPres = pptApp.Presentations.Add
+    
+    ' Slide 1: Introduction
+    Set pptSlide = pptPres.Slides.Add(1, ppLayoutTitle)
+    With pptSlide.Shapes.Title
+        .TextFrame.TextRange.Text = "Dynamically Loading Brightcove Videos on Click"
+        .TextFrame.TextRange.Font.Size = 28
+        .TextFrame.TextRange.Font.Bold = msoTrue
+    End With
+    
+    ' Slide 2: Objective
+    Set pptSlide = pptPres.Slides.Add(2, ppLayoutTitle)
+    With pptSlide.Shapes.Title
+        .TextFrame.TextRange.Text = "Objective"
+        .TextFrame.TextRange.Font.Size = 24
+        .TextFrame.TextRange.Font.Bold = msoTrue
+    End With
+    pptSlide.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 100, 600, 300).TextFrame.TextRange.Text = "Enable junior front end developers to understand and implement dynamic loading of Brightcove videos. Explain the benefits of dynamically loading videos, such as reducing initial page load time and improving overall performance."
+    
+    ' Slide 3: Overview of Brightcove Video Player API
+    Set pptSlide = pptPres.Slides.Add(3, ppLayoutTitle)
+    With pptSlide.Shapes.Title
+        .TextFrame.TextRange.Text = "Overview of Brightcove Video Player API"
+        .TextFrame.TextRange.Font.Size = 24
+        .TextFrame.TextRange.Font.Bold = msoTrue
+    End With
+    pptSlide.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 100, 600, 300).TextFrame.TextRange.Text = "Introduce Brightcove Video Player API as the foundation for dynamically loading videos. Highlight key features and functionalities that the API provides for seamless video integration."
+    
+    ' Slide 4: Steps to Dynamically Load Brightcove Videos - Step 1: HTML Structure
+    Set pptSlide = pptPres.Slides.Add(4, ppLayoutTitle)
+    With pptSlide.Shapes.Title
+        .TextFrame.TextRange.Text = "Steps to Dynamically Load Brightcove Videos - Step 1: HTML Structure"
+        .TextFrame.TextRange.Font.Size = 24
+        .TextFrame.TextRange.Font.Bold = msoTrue
+    End With
+    pptSlide.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 100, 600, 300).TextFrame.TextRange.Text = "Explain the need for an HTML structure that includes the video container element and a trigger element (e.g., button, link) to initiate video loading."
+    
+    ' Continue adding slides for the remaining steps and content
+    
+    ' Save and close the PowerPoint presentation
+    pptPres.SaveAs "C:\Path\To\Your\Presentation.pptx"
+    pptPres.Close
+    pptApp.Quit
+    
+    ' Clean up objects
+    Set pptSlide = Nothing
+    Set pptPres = Nothing
+    Set pptApp = Nothing
+    
+    MsgBox "Slide deck created successfully!"
+End Sub
