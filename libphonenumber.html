@@ -1,0 +1,55 @@
+<head>
+  <!-- Other meta tags, styles, and scripts -->
+  <script id="libphonenumber-script" src="https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
+</head>
+
+
+
+const countrySelect = document.getElementById('countrySelect');
+const phoneInput = document.getElementById('phoneInput');
+let libphonenumberLoaded = false;
+
+// Event listener for country selection change
+countrySelect.addEventListener('change', function () {
+  if (!libphonenumberLoaded) {
+    loadLibphonenumber(() => handleCountryChange());
+  } else {
+    handleCountryChange();
+  }
+});
+
+// Event listener for input changes
+phoneInput.addEventListener('input', function () {
+  if (!libphonenumberLoaded) {
+    loadLibphonenumber(() => handlePhoneInput());
+  } else {
+    handlePhoneInput();
+  }
+});
+
+// Function to load libphonenumber script
+function loadLibphonenumber(callback) {
+  const script = document.getElementById('libphonenumber-script');
+  script.onload = () => {
+    libphonenumberLoaded = true;
+    callback();
+  };
+}
+
+// Function to handle country change
+function handleCountryChange() {
+  const selectedCountry = countrySelect.value;
+
+  const placeholderPattern = getPlaceholderPatternForCountry(selectedCountry);
+  phoneInput.placeholder = placeholderPattern;
+  phoneInput.value = '';
+}
+
+// Function to handle phone input changes
+function handlePhoneInput() {
+  const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
+  const formattedNumber = formatPhoneNumber(rawNumber, countrySelect.value);
+  phoneInput.value = formattedNumber;
+}
+
+// Rest of the code remains the same
