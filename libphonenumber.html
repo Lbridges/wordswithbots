@@ -53,3 +53,33 @@ function handlePhoneInput() {
 }
 
 // Rest of the code remains the same
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include necessary CSS and scripts -->
+  <link rel="stylesheet" href="path-to/intl-tel-input/css/intlTelInput.min.css">
+  <script src="path-to/intl-tel-input/js/intlTelInput.min.js"></script>
+  <script src="path-to/intl-tel-input/js/utils.js"></script>
+</head>
+<body>
+
+<input type="tel" id="phoneInput" placeholder="Enter phone number">
+
+<script>
+  // Initialize intl-tel-input on the phone input field
+  const phoneInput = document.getElementById('phoneInput');
+  const iti = window.intlTelInput(phoneInput, {
+    utilsScript: 'path-to/intl-tel-input/js/utils.js'
+    // Other options here
+  });
+
+  // Add event listener for input changes
+  phoneInput.addEventListener('input', function () {
+    // Get the formatted number from the intl-tel-input instance
+    const formattedNumber = iti.getNumber();
+    phoneInput.value = formattedNumber;
+  });
+</script>
+
+</body>
+</html>
