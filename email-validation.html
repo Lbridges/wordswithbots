@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // Function to validate an email address
+    function validateEmail(emailInput) {
+      const email = emailInput.value;
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+      if (emailPattern.test(email)) {
+        emailInput.classList.remove('error');
+        return true;
+      } else {
+        emailInput.classList.add('error');
+        return false;
+      }
+    }
+
+    // Add event listener to validate email on focus out
+    document.addEventListener('focusout', function(event) {
+      const target = event.target;
+      if (target && target.matches('#emailInput')) {
+        validateEmail(target);
+      }
+    });
+
+    // Add event listener to validate email when clicking outside the form
+    document.addEventListener('click', function(event) {
+      const target = event.target;
+      if (target && target.tagName.toLowerCase() !== 'form') {
+        const emailInput = document.getElementById('emailInput');
+        if (emailInput) {
+          validateEmail(emailInput);
+        }
+      }
+    });
+  </script>
+  <style>
+    .error {
+      border-color: red;
+    }
+  </style>
+</head>
+<body>
+
+<form>
+  <label for="emailInput">Email:</label>
+  <input type="email" id="emailInput" placeholder="Enter your email">
+</form>
+
+<!-- Other form fields -->
+
+</body>
+</html>
