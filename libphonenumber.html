@@ -13,15 +13,15 @@
 <body>
 
 <form>
-  <label for="phoneInput">Phone:</label>
-  <input type="tel" id="phoneInput">
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone">
 </form>
 
 <!-- Include the intlTelInput library script -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
 <script>
   // Initialize intl-tel-input on the phone input field
-  const phoneInput = document.getElementById('phoneInput');
+  const phoneInput = document.getElementById('phone');
   const iti = window.intlTelInput(phoneInput, {
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
