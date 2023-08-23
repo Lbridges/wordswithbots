@@ -18,7 +18,7 @@
 
 <form>
   <label for="phone">Phone:</label>
-  <input type="tel" id="phone">
+  <input type="tel" id="phone" placeholder="">
 </form>
 
 <!-- Include the intlTelInput library script -->
@@ -42,10 +42,14 @@
 
   function updateInputMask() {
     const selectedCountry = iti.getSelectedCountryData();
-    const placeholderFormat = selectedCountry.placeholder.replace(/[0-9]/g, '9');
-    inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + placeholderFormat;
+    const formatPlaceholder = selectedCountry.dialCode.replace(/\d/g, '0');
+    inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + formatPlaceholder;
+    inputMaskOptions.placeholder = '+' + selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
     $(phoneInput).inputmask(inputMaskOptions);
   }
+
+  // Listen for the "countrychange" event to update the input mask
+  iti.input.addEventListener('countrychange', updateInputMask);
 
   // Initial update of input mask
   updateInputMask();
