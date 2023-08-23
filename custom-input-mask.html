@@ -21,20 +21,10 @@
 <!-- Include the intlTelInput library script -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
 <script>
-  // Define preferred countries
-  const preferredCountries = ['ae', 'qa', 'om', 'fr', 'de', 'it', 'no', 'ch', 'gb'];
-
   // Initialize intl-tel-input on the phone input field
   const phoneInput = document.getElementById('phone');
   const iti = window.intlTelInput(phoneInput, {
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
-  });
-
-  // Set preferred countries
-  iti.promise.then(function () {
-    const countryList = iti.getCountries();
-    const preferredCountryData = countryList.filter(country => preferredCountries.includes(country.iso2));
-    iti.setCountries(preferredCountryData);
   });
 
   // Helper function to validate and show error for phone field
