@@ -8,6 +8,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script>
   
+  <!-- Include the libphonenumber library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.17/libphonenumber-js.min.js"></script>
+  
   <style>
     .error {
       border-color: red;
@@ -32,36 +35,24 @@
 
   // Initialize Inputmask on the phone input field
   const inputMaskOptions = {
+    mask: '+{1,}-{0,}0{0,}',
     placeholder: '',
-    autoUnmask: true,
-    onBeforePaste: function (pastedValue, opts) {
-      // Remove non-numeric characters from pasted value
-      return pastedValue.replace(/\D/g, '');
+    definitions: {
+      '1': {
+        validator: '[0-9]'
+      }
     }
   };
 
-  function updateInputMask() {
-    const selectedCountry = iti.getSelectedCountryData();
-    if (selectedCountry) {
-      const formatPlaceholder = selectedCountry.dialCode.replace(/\d/g, '0');
-      inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + formatPlaceholder;
-      inputMaskOptions.placeholder = '+' + selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
-      $(phoneInput).inputmask(inputMaskOptions);
-    }
-  }
-
-  // Listen for the "input" event to update the input mask
-  phoneInput.addEventListener('input', function () {
-    // Do not need to format here, just let the user type
-  });
-
-  // Initialize the input mask and placeholder
-  updateInputMask();
+  // Initialize Inputmask
+  $(phoneInput).inputmask(inputMaskOptions);
 
   // Listen for the "countrychange" event to update the input mask and placeholder
   iti.promise.then(function () {
     iti.selectedCountryData.dialCodeElement.addEventListener('countrychange', function () {
-      updateInputMask();
+      const selectedCountry = iti.getSelectedCountryData();
+      inputMaskOptions.mask = '+' + selectedCountry.dialCode + '-{0,}0{0,}';
+      $(phoneInput).inputmask(inputMaskOptions);
     });
   });
 </script>
