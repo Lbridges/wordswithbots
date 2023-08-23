@@ -19,21 +19,30 @@
       }
     }
 
-    // Function to validate a phone number
-    function validatePhoneNumber(phoneInput) {
-      const phone = phoneInput.value;
-      const phonePattern = /^[0-9]{10}$/; // Example pattern for 10-digit phone numbers
-      const errorElement = phoneInput.nextElementSibling;
+    // Function to dynamically load the libphonenumber-js library
+    function loadPhoneNumberLibrary() {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-js.min.js';
+      document.head.appendChild(script);
 
-      if (phonePattern.test(phone)) {
-        phoneInput.classList.remove('error');
-        errorElement.textContent = '';
-        return true;
-      } else {
-        phoneInput.classList.add('error');
-        errorElement.textContent = 'Invalid phone number';
-        return false;
-      }
+      script.onload = function() {
+        initPhoneNumberInput();
+      };
+    }
+
+    // Initialize intl-tel-input on the phone input field
+    function initPhoneNumberInput() {
+      const phoneInput = document.getElementById('phoneInput');
+      const iti = window.intlTelInput(phoneInput, {
+        utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/utils.js'
+      });
+
+      // Event listener for input changes
+      phoneInput.addEventListener('input', function () {
+        const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
+        const formattedNumber = iti.formatNumber(rawNumber);
+        phoneInput.value = formattedNumber;
+      });
     }
 
     // Add event listeners for email and phone validation
@@ -41,22 +50,14 @@
       const target = event.target;
       if (target.matches('#emailInput')) {
         validateEmail(target);
-      } else if (target.matches('#phoneInput')) {
-        validatePhoneNumber(target);
       }
     });
 
     document.addEventListener('click', function(event) {
       const target = event.target;
-      if (target.tagName.toLowerCase() !== 'form') {
-        const emailInput = document.getElementById('emailInput');
-        const phoneInput = document.getElementById('phoneInput');
-        
-        if (emailInput && emailInput !== target) {
-          validateEmail(emailInput);
-        }
-        if (phoneInput && phoneInput !== target) {
-          validatePhoneNumber(phoneInput);
+      if (target.matches('#phoneInput')) {
+        if (!document.querySelector('script[src*="libphonenumber-js"]')) {
+          loadPhoneNumberLibrary();
         }
       }
     });
