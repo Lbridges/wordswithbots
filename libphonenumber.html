@@ -1,85 +1,40 @@
-<head>
-  <!-- Other meta tags, styles, and scripts -->
-  <script id="libphonenumber-script" src="https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
-</head>
-
-
-
-const countrySelect = document.getElementById('countrySelect');
-const phoneInput = document.getElementById('phoneInput');
-let libphonenumberLoaded = false;
-
-// Event listener for country selection change
-countrySelect.addEventListener('change', function () {
-  if (!libphonenumberLoaded) {
-    loadLibphonenumber(() => handleCountryChange());
-  } else {
-    handleCountryChange();
-  }
-});
-
-// Event listener for input changes
-phoneInput.addEventListener('input', function () {
-  if (!libphonenumberLoaded) {
-    loadLibphonenumber(() => handlePhoneInput());
-  } else {
-    handlePhoneInput();
-  }
-});
-
-// Function to load libphonenumber script
-function loadLibphonenumber(callback) {
-  const script = document.getElementById('libphonenumber-script');
-  script.onload = () => {
-    libphonenumberLoaded = true;
-    callback();
-  };
-}
-
-// Function to handle country change
-function handleCountryChange() {
-  const selectedCountry = countrySelect.value;
-
-  const placeholderPattern = getPlaceholderPatternForCountry(selectedCountry);
-  phoneInput.placeholder = placeholderPattern;
-  phoneInput.value = '';
-}
-
-// Function to handle phone input changes
-function handlePhoneInput() {
-  const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
-  const formattedNumber = formatPhoneNumber(rawNumber, countrySelect.value);
-  phoneInput.value = formattedNumber;
-}
-
-// Rest of the code remains the same
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- Include necessary CSS and scripts -->
-  <link rel="stylesheet" href="path-to/intl-tel-input/css/intlTelInput.min.css">
-  <script src="path-to/intl-tel-input/js/intlTelInput.min.js"></script>
-  <script src="path-to/intl-tel-input/js/utils.js"></script>
-</head>
-<body>
-
-<input type="tel" id="phoneInput" placeholder="Enter phone number">
+<!-- Include the intlTelInput library script -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/intlTelInput.min.js"></script>
 
 <script>
-  // Initialize intl-tel-input on the phone input field
-  const phoneInput = document.getElementById('phoneInput');
-  const iti = window.intlTelInput(phoneInput, {
-    utilsScript: 'path-to/intl-tel-input/js/utils.js'
-    // Other options here
-  });
+  // Function to dynamically load the libphonenumber-js library
+  function loadPhoneNumberLibrary() {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-js.min.js';
+    document.head.appendChild(script);
 
-  // Add event listener for input changes
-  phoneInput.addEventListener('input', function () {
-    // Get the formatted number from the intl-tel-input instance
-    const formattedNumber = iti.getNumber();
-    phoneInput.value = formattedNumber;
+    script.onload = function() {
+      initPhoneNumberInput();
+    };
+  }
+
+  // Initialize intl-tel-input on the phone input field
+  function initPhoneNumberInput() {
+    const phoneInput = document.getElementById('phoneInput');
+    const iti = window.intlTelInput(phoneInput, {
+      utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/utils.js'
+    });
+
+    // Event listener for input changes
+    phoneInput.addEventListener('input', function () {
+      const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
+      const formattedNumber = iti.formatNumber(rawNumber);
+      phoneInput.value = formattedNumber;
+    });
+  }
+
+  // Add event listener for phone input focus
+  document.addEventListener('focusin', function(event) {
+    const target = event.target;
+    if (target.matches('#phoneInput')) {
+      if (!document.querySelector('script[src*="libphonenumber-js"]')) {
+        loadPhoneNumberLibrary();
+      }
+    }
   });
 </script>
-
-</body>
-</html>
