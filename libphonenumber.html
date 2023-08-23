@@ -31,18 +31,32 @@
   });
 
   // Initialize Inputmask on the phone input field
-  $(phoneInput).inputmask('+{1,3} 999 999 9999');
+  const inputMaskOptions = {
+    placeholder: '',
+    autoUnmask: true,
+    onBeforePaste: function (pastedValue, opts) {
+      // Remove non-numeric characters from pasted value
+      return pastedValue.replace(/\D/g, '');
+    }
+  };
 
-  // Listen for the "countrychange" event to update the placeholder
-  iti.input.addEventListener('countrychange', function () {
+  function updateInputMask() {
     const selectedCountry = iti.getSelectedCountryData();
-    phoneInput.placeholder = selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
-  });
+    const placeholderFormat = selectedCountry.placeholder.replace(/[0-9]/g, '9');
+    inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + placeholderFormat;
+    $(phoneInput).inputmask(inputMaskOptions);
+  }
+
+  // Listen for the "countrychange" event to update the input mask
+  iti.input.addEventListener('countrychange', updateInputMask);
 
   // Event listener for input changes
   phoneInput.addEventListener('input', function () {
     // Do not need to format here, just let the user type
   });
+
+  // Initial update of input mask
+  updateInputMask();
 </script>
 
 </body>
