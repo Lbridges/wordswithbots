@@ -21,18 +21,8 @@
 <!-- Include the intlTelInput library script -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
 <script>
-  // Define preferred countries with input masking patterns
-  const preferredCountries = [
-    { iso2: 'ae', mask: '+971 00 000 0000' }, // United Arab Emirates
-    { iso2: 'qa', mask: '+974 0000 0000' },   // Qatar
-    { iso2: 'om', mask: '+968 0000 0000' },   // Oman
-    { iso2: 'fr', mask: '+33 0 00 00 00 00' }, // France
-    { iso2: 'de', mask: '+49 0000 000000' },   // Germany
-    { iso2: 'it', mask: '+39 000 000 0000' },  // Italy
-    { iso2: 'no', mask: '+47 00 00 00 00' },   // Norway
-    { iso2: 'ch', mask: '+41 00 000 00 00' },  // Switzerland
-    { iso2: 'gb', mask: '+44 0 0000 000000' }  // Great Britain
-  ];
+  // Define preferred countries
+  const preferredCountries = ['ae', 'qa', 'om', 'fr', 'de', 'it', 'no', 'ch', 'gb'];
 
   // Initialize intl-tel-input on the phone input field
   const phoneInput = document.getElementById('phone');
@@ -40,16 +30,11 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Set preferred countries and input masks
+  // Set preferred countries
   iti.promise.then(function () {
     const countryList = iti.getCountries();
-    preferredCountries.forEach(prefCountry => {
-      const countryData = countryList.find(country => country.iso2 === prefCountry.iso2);
-      if (countryData) {
-        countryData.mask = prefCountry.mask;
-      }
-    });
-    iti.setCountries(countryList);
+    const preferredCountryData = countryList.filter(country => preferredCountries.includes(country.iso2));
+    iti.setCountries(preferredCountryData);
   });
 
   // Helper function to validate and show error for phone field
