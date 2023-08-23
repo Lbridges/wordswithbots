@@ -22,7 +22,7 @@
   <p class="error-message"></p>
 
   <label for="phoneInput">Phone:</label>
-  <input type="tel" id="phoneInput" placeholder="Enter your phone number">
+  <input type="tel" id="phoneInput" placeholder=" ">
   <p class="error-message"></p>
 
   <button type="button">Submit</button>
@@ -63,6 +63,11 @@
         loadPhoneNumberLibrary();
       }
     }
+  });
+
+  // Initialize intl-tel-input on load for phoneInput
+  window.addEventListener('load', function() {
+    initPhoneNumberInput();
   });
 </script>
 
