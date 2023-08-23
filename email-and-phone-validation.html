@@ -1,89 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script>
-    // Function to validate an email address
-    function validateEmail(emailInput) {
-      const email = emailInput.value;
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      const errorElement = emailInput.nextElementSibling;
-
-      if (emailPattern.test(email)) {
-        emailInput.classList.remove('error');
-        errorElement.textContent = '';
-        return true;
-      } else {
-        emailInput.classList.add('error');
-        errorElement.textContent = 'Invalid email format';
-        return false;
-      }
-    }
-
-    // Function to dynamically load the libphonenumber-js library
-    function loadPhoneNumberLibrary() {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-js.min.js';
-      document.head.appendChild(script);
-
-      script.onload = function() {
-        initPhoneNumberInput();
-      };
-    }
-
-    // Initialize intl-tel-input on the phone input field
-    function initPhoneNumberInput() {
-      const phoneInput = document.getElementById('phoneInput');
-      const iti = window.intlTelInput(phoneInput, {
-        utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/utils.js'
-      });
-
-      // Event listener for input changes
-      phoneInput.addEventListener('input', function () {
-        const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
-        const formattedNumber = iti.formatNumber(rawNumber);
-        phoneInput.value = formattedNumber;
-      });
-    }
-
-    // Add event listeners for email and phone validation
-    document.addEventListener('focusout', function(event) {
-      const target = event.target;
-      if (target.matches('#emailInput')) {
-        validateEmail(target);
-      }
-    });
-
-    document.addEventListener('click', function(event) {
-      const target = event.target;
-      if (target.matches('#phoneInput')) {
-        if (!document.querySelector('script[src*="libphonenumber-js"]')) {
-          loadPhoneNumberLibrary();
-        }
-      }
-    });
-  </script>
+  <!-- Include the intlTelInput library CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/css/intlTelInput.min.css">
+  
   <style>
     .error {
       border-color: red;
-    }
-    .error-message {
-      color: red;
     }
   </style>
 </head>
 <body>
 
 <form>
-  <label for="emailInput">Email:</label>
-  <input type="email" id="emailInput" placeholder="Enter your email">
-  <p class="error-message"></p>
-
-  <label for="phoneInput">Phone:</label>
-  <input type="tel" id="phoneInput" placeholder="Enter your phone number">
-  <p class="error-message"></p>
-
-  <button type="button">Submit</button>
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" placeholder="">
+  <div id="phone-error" style="color: red;"></div>
+  
+  <label for="email">Email:</label>
+  <input type="email" id="email" placeholder="">
+  <div id="email-error" style="color: red;"></div>
 </form>
+
+<!-- Include the intlTelInput library script -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
+<script>
+  // Initialize intl-tel-input on the phone input field
+  const phoneInput = document.getElementById('phone');
+  const iti = window.intlTelInput(phoneInput, {
+    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
+  });
+
+  // Listen for the "countrychange" event to update Cleave.js options
+  iti.promise.then(function () {
+    iti.input.addEventListener('countrychange', function () {
+      // Country change handler if needed
+    });
+  });
+
+  // Helper function to validate and show error for phone field
+  function validatePhone() {
+    const isValid = iti.isValidNumber();
+    if (!isValid) {
+      const error = iti.getValidationError();
+      const errorMessage = getErrorMessage(error);
+      document.getElementById('phone-error').textContent = errorMessage;
+      phoneInput.classList.add('error');
+    } else {
+      document.getElementById('phone-error').textContent = '';
+      phoneInput.classList.remove('error');
+    }
+  }
+
+  // Listen for the "input" event to update the phone validation
+  phoneInput.addEventListener('input', validatePhone);
+
+  // Validate phone field onBlur and when clicking elsewhere on the page
+  document.addEventListener('click', function (event) {
+    const isPhoneInput = event.target === phoneInput || phoneInput.contains(event.target);
+    if (!isPhoneInput) {
+      validatePhone();
+    }
+  });
+
+  // Helper function to map error codes to user-friendly error messages
+  function getErrorMessage(error) {
+    switch (error) {
+      case window.intlTelInputUtils.validationError.TOO_SHORT:
+        return 'Phone number is too short.';
+      case window.intlTelInputUtils.validationError.TOO_LONG:
+        return 'Phone number is too long.';
+      case window.intlTelInputUtils.validationError.NOT_A_NUMBER:
+        return 'Invalid characters in the phone number.';
+      // Add more cases for other error codes if needed
+      default:
+        return 'Invalid phone number.';
+    }
+  }
+
+  // Email validation logic
+  const emailInput = document.getElementById('email');
+  const emailErrorDiv = document.getElementById('email-error');
+
+  function validateEmail() {
+    const isValidEmail = isValidEmailFormat(emailInput.value);
+    if (!isValidEmail) {
+      emailErrorDiv.textContent = 'Invalid email format.';
+      emailInput.classList.add('error');
+    } else {
+      emailErrorDiv.textContent = '';
+      emailInput.classList.remove('error');
+    }
+  }
+
+  // Listen for the "input" event to update the email validation
+  emailInput.addEventListener('input', validateEmail);
+
+  // Validate email field onBlur and when clicking elsewhere on the page
+  document.addEventListener('click', function (event) {
+    const isEmailInput = event.target === emailInput || emailInput.contains(event.target);
+    if (!isEmailInput) {
+      validateEmail();
+    }
+  });
+
+  // Helper function to validate email format
+  function isValidEmailFormat(email) {
+    // Simple email format validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+</script>
 
 </body>
 </html>
