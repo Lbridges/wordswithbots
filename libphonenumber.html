@@ -26,7 +26,6 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Listen for the "countrychange" event to update Cleave.js options
   iti.promise.then(function () {
     iti.input.addEventListener('countrychange', function () {
       // Country change handler if needed
