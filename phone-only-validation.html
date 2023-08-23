@@ -2,7 +2,7 @@
 <html>
 <head>
   <!-- Include the intlTelInput library CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/css/intlTelInput.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
   
   <style>
     .error {
@@ -18,16 +18,15 @@
   <div id="phone-error" style="color: red;"></div>
 </form>
 
-<!-- Include the intlTelInput library script -->
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 <script>
-  // Initialize intl-tel-input on the phone input field
-  const phoneInput = document.getElementById('phone');
-  const iti = window.intlTelInput(phoneInput, {
-    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
+  const input = document.querySelector("#phone");
+  window.intlTelInput(input, {
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
   });
 
-  // Listen for the "countrychange" event to update Cleave.js options
+
+  
   iti.promise.then(function () {
     iti.input.addEventListener('countrychange', function () {
       // Country change handler if needed
