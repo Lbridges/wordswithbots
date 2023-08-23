@@ -52,10 +52,10 @@
         const emailInput = document.getElementById('emailInput');
         const phoneInput = document.getElementById('phoneInput');
         
-        if (emailInput) {
+        if (emailInput && emailInput !== target) {
           validateEmail(emailInput);
         }
-        if (phoneInput) {
+        if (phoneInput && phoneInput !== target) {
           validatePhoneNumber(phoneInput);
         }
       }
