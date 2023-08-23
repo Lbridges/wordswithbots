@@ -4,12 +4,8 @@
   <!-- Include the intlTelInput library CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/css/intlTelInput.min.css">
 
-  <!-- Include the Inputmask library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script>
-  
-  <!-- Include the libphonenumber library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.17/libphonenumber-js.min.js"></script>
+  <!-- Include the Cleave.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
   
   <style>
     .error {
@@ -33,26 +29,17 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Initialize Inputmask on the phone input field
-  const inputMaskOptions = {
-    mask: '+{1,}-{0,}0{0,}',
-    placeholder: '',
-    definitions: {
-      '1': {
-        validator: '[0-9]'
-      }
-    }
-  };
+  // Initialize Cleave.js for phone number formatting
+  const cleave = new Cleave(phoneInput, {
+    phone: true,
+    phoneRegionCode: 'US', // Set default region if needed
+  });
 
-  // Initialize Inputmask
-  $(phoneInput).inputmask(inputMaskOptions);
-
-  // Listen for the "countrychange" event to update the input mask and placeholder
+  // Listen for the "countrychange" event to update Cleave.js options
   iti.promise.then(function () {
-    iti.selectedCountryData.dialCodeElement.addEventListener('countrychange', function () {
+    iti.input.addEventListener('countrychange', function () {
       const selectedCountry = iti.getSelectedCountryData();
-      inputMaskOptions.mask = '+' + selectedCountry.dialCode + '-{0,}0{0,}';
-      $(phoneInput).inputmask(inputMaskOptions);
+      cleave.setPhoneRegionCode(selectedCountry.iso2);
     });
   });
 </script>
