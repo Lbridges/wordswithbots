@@ -3,9 +3,6 @@
 <head>
   <!-- Include the intlTelInput library CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/css/intlTelInput.min.css">
-
-  <!-- Include the Cleave.js library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
   
   <style>
     .error {
@@ -29,18 +26,24 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Initialize Cleave.js for phone number formatting
-  const cleave = new Cleave(phoneInput, {
-    phone: true,
-    phoneRegionCode: 'US', // Set default region if needed
-  });
-
   // Listen for the "countrychange" event to update Cleave.js options
   iti.promise.then(function () {
     iti.input.addEventListener('countrychange', function () {
-      const selectedCountry = iti.getSelectedCountryData();
-      cleave.setPhoneRegionCode(selectedCountry.iso2);
+      // Country change handler if needed
     });
+  });
+
+  // Validate phone field onBlur and when clicking elsewhere on the page
+  document.addEventListener('click', function (event) {
+    const isPhoneInput = event.target === phoneInput || phoneInput.contains(event.target);
+    if (!isPhoneInput) {
+      const isValid = iti.isValidNumber();
+      if (!isValid) {
+        phoneInput.classList.add('error');
+      } else {
+        phoneInput.classList.remove('error');
+      }
+    }
   });
 </script>
 
