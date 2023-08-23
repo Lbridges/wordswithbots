@@ -2,7 +2,7 @@
 <html>
 <head>
   <!-- Include the intlTelInput library CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.min.css">
 </head>
 <body>
 
@@ -15,31 +15,32 @@
 </form>
 
 <!-- Include the intlTelInput library script -->
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 <script>
+  // Initialize intl-tel-input on the phone input field
   const input = document.querySelector("#phone");
-  window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+  const iti = window.intlTelInput(input, {
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
   });
-
 
   // Helper function to validate and show error for phone field
   function validatePhone() {
     const isValid = iti.isValidNumber();
     if (!isValid) {
       document.getElementById('phone-error').textContent = 'Invalid phone number';
+      input.classList.add('error');
     } else {
       document.getElementById('phone-error').textContent = '';
+      input.classList.remove('error');
     }
   }
 
   // Listen for the "input" event to update the phone validation
-  phoneInput.addEventListener('input', validatePhone);
+  input.addEventListener('input', validatePhone);
 
   // Validate phone field onBlur and when clicking elsewhere on the page
   document.addEventListener('click', function (event) {
-    const isPhoneInput = event.target === phoneInput || phoneInput.contains(event.target);
+    const isPhoneInput = event.target === input || input.contains(event.target);
     if (!isPhoneInput) {
       validatePhone();
     }
