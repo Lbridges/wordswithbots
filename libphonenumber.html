@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Include the intlTelInput library CSS and script -->
+  <!-- Include the intlTelInput library CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/css/intlTelInput.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/intlTelInput.min.js"></script>
 
   <style>
     .error {
@@ -18,11 +17,20 @@
   <input type="tel" id="phoneInput">
 </form>
 
+<!-- Include the intlTelInput library script -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/intlTelInput.min.js"></script>
 <script>
   // Initialize intl-tel-input on the phone input field
   const phoneInput = document.getElementById('phoneInput');
   const iti = window.intlTelInput(phoneInput, {
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/js/utils.js'
+  });
+
+  // Event listener for input changes
+  phoneInput.addEventListener('input', function () {
+    const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
+    const formattedNumber = iti.formatNumber(rawNumber);
+    phoneInput.value = formattedNumber;
   });
 </script>
 
