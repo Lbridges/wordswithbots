@@ -42,24 +42,25 @@
 
   function updateInputMask() {
     const selectedCountry = iti.getSelectedCountryData();
-    const formatPlaceholder = selectedCountry.dialCode.replace(/\d/g, '0');
-    inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + formatPlaceholder;
-    inputMaskOptions.placeholder = '+' + selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
-    $(phoneInput).inputmask(inputMaskOptions);
+    if (selectedCountry) {
+      const formatPlaceholder = selectedCountry.dialCode.replace(/\d/g, '0');
+      inputMaskOptions.mask = '+' + selectedCountry.dialCode + ' ' + formatPlaceholder;
+      inputMaskOptions.placeholder = '+' + selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
+      $(phoneInput).inputmask(inputMaskOptions);
+    }
   }
 
   // Listen for the "input" event to update the input mask
   phoneInput.addEventListener('input', function () {
-    const inputValue = phoneInput.value;
-    // Update the value if needed, such as to handle deleting digits
-    // Example: const newValue = modifyInputValue(inputValue);
-    // phoneInput.value = newValue;
+    // Do not need to format here, just let the user type
   });
 
   // Listen for the "countrychange" event to update the input mask
-  iti.input.addEventListener('countrychange', updateInputMask);
+  iti.input.addEventListener('countrychange', function () {
+    updateInputMask();
+  });
 
-  // Initial update of input mask
+  // Initialize the input mask and placeholder
   updateInputMask();
 </script>
 
