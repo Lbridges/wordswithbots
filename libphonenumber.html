@@ -3,6 +3,10 @@
 <head>
   <!-- Include the intlTelInput library CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/css/intlTelInput.min.css">
+
+  <!-- Include the Inputmask library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script>
   
   <style>
     .error {
@@ -14,7 +18,7 @@
 
 <form>
   <label for="phone">Phone:</label>
-  <input type="tel" id="phone" placeholder="">
+  <input type="tel" id="phone">
 </form>
 
 <!-- Include the intlTelInput library script -->
@@ -26,21 +30,19 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Manually update the placeholder to use the selected country's format
-  function updatePlaceholder() {
+  // Initialize Inputmask on the phone input field
+  $(phoneInput).inputmask('+{1,3} 999 999 9999');
+
+  // Listen for the "countrychange" event to update the placeholder
+  iti.input.addEventListener('countrychange', function () {
     const selectedCountry = iti.getSelectedCountryData();
-    const placeholderFormat = selectedCountry.placeholder.replace(/[0-9]/g, '0');
-    phoneInput.placeholder = '+' + selectedCountry.dialCode + ' ' + placeholderFormat;
-  }
+    phoneInput.placeholder = selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
+  });
 
   // Event listener for input changes
   phoneInput.addEventListener('input', function () {
     // Do not need to format here, just let the user type
   });
-
-  // Update the placeholder when the user selects a new country
-  iti.promise.then(updatePlaceholder);
-  iti.input.addEventListener('countrychange', updatePlaceholder);
 </script>
 
 </body>
