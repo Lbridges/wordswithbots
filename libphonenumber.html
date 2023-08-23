@@ -14,12 +14,11 @@
 
 <form>
   <label for="phone">Phone:</label>
-  <input type="tel" id="phone">
+  <input type="tel" id="phone" placeholder="">
 </form>
 
 <!-- Include the intlTelInput library script -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/8.12.14/libphonenumber.js"></script>
 <script>
   // Initialize intl-tel-input on the phone input field
   const phoneInput = document.getElementById('phone');
@@ -27,13 +26,15 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
+  // Listen for the "countrychange" event to update the placeholder
+  iti.input.addEventListener('countrychange', function () {
+    const selectedCountry = iti.getSelectedCountryData();
+    phoneInput.placeholder = selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
+  });
+
   // Event listener for input changes
   phoneInput.addEventListener('input', function () {
-    const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
-    const countryCode = iti.getSelectedCountryData().iso2;
-
-    const formattedNumber = libphonenumber.format(rawNumber, countryCode, 'INTERNATIONAL');
-    phoneInput.value = formattedNumber;
+    // Do not need to format here, just let the user type
   });
 </script>
 
