@@ -19,6 +19,7 @@
 
 <!-- Include the intlTelInput library script -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/8.12.14/libphonenumber.js"></script>
 <script>
   // Initialize intl-tel-input on the phone input field
   const phoneInput = document.getElementById('phone');
@@ -29,7 +30,9 @@
   // Event listener for input changes
   phoneInput.addEventListener('input', function () {
     const rawNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digit characters
-    const formattedNumber = iti.formatNumber(rawNumber);
+    const countryCode = iti.getSelectedCountryData().iso2;
+
+    const formattedNumber = libphonenumber.format(rawNumber, countryCode, 'INTERNATIONAL');
     phoneInput.value = formattedNumber;
   });
 </script>
