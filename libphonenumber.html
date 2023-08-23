@@ -15,6 +15,7 @@
 <form>
   <label for="phone">Phone:</label>
   <input type="tel" id="phone" placeholder="">
+  <div id="phone-error" style="color: red;"></div>
 </form>
 
 <!-- Include the intlTelInput library script -->
@@ -26,6 +27,7 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
+  // Listen for the "countrychange" event to update Cleave.js options
   iti.promise.then(function () {
     iti.input.addEventListener('countrychange', function () {
       // Country change handler if needed
@@ -38,12 +40,31 @@
     if (!isPhoneInput) {
       const isValid = iti.isValidNumber();
       if (!isValid) {
+        const error = iti.getValidationError();
+        const errorMessage = getErrorMessage(error);
+        document.getElementById('phone-error').textContent = errorMessage;
         phoneInput.classList.add('error');
       } else {
+        document.getElementById('phone-error').textContent = '';
         phoneInput.classList.remove('error');
       }
     }
   });
+
+  // Helper function to map error codes to user-friendly error messages
+  function getErrorMessage(error) {
+    switch (error) {
+      case window.intlTelInputUtils.validationError.TOO_SHORT:
+        return 'Phone number is too short.';
+      case window.intlTelInputUtils.validationError.TOO_LONG:
+        return 'Phone number is too long.';
+      case window.intlTelInputUtils.validationError.NOT_A_NUMBER:
+        return 'Invalid characters in the phone number.';
+      // Add more cases for other error codes if needed
+      default:
+        return 'Invalid phone number.';
+    }
+  }
 </script>
 
 </body>
