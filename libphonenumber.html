@@ -55,13 +55,15 @@
     // Do not need to format here, just let the user type
   });
 
-  // Listen for the "countrychange" event to update the input mask
-  iti.input.addEventListener('countrychange', function () {
-    updateInputMask();
-  });
-
   // Initialize the input mask and placeholder
   updateInputMask();
+
+  // Listen for the "countrychange" event to update the input mask and placeholder
+  iti.promise.then(function () {
+    iti.selectedCountryData.dialCodeElement.addEventListener('countrychange', function () {
+      updateInputMask();
+    });
+  });
 </script>
 
 </body>
