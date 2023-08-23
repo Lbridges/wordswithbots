@@ -47,14 +47,6 @@
     $(phoneInput).inputmask(inputMaskOptions);
   }
 
-  // Listen for the "countrychange" event to update the input mask
-  iti.input.addEventListener('countrychange', updateInputMask);
-
-  // Event listener for input changes
-  phoneInput.addEventListener('input', function () {
-    // Do not need to format here, just let the user type
-  });
-
   // Initial update of input mask
   updateInputMask();
 </script>
