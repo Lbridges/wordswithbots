@@ -26,10 +26,13 @@
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/js/utils.js'
   });
 
-  // Listen for the "countrychange" event to update the placeholder
-  iti.input.addEventListener('countrychange', function () {
+  // Manually update the placeholder when the user changes the country
+  const countrySelect = iti.selectedCountry.parentNode.querySelector('.iti__selected-dial-code');
+  const placeholder = phoneInput.getAttribute('placeholder');
+
+  countrySelect.addEventListener('click', function () {
     const selectedCountry = iti.getSelectedCountryData();
-    phoneInput.placeholder = selectedCountry.dialCode + ' ' + selectedCountry.placeholder;
+    phoneInput.placeholder = '+' + selectedCountry.dialCode + ' ' + placeholder;
   });
 
   // Event listener for input changes
