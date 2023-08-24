@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<form>
+  <label for="email">Email:</label>
+  <input type="email" id="email" placeholder="">
+
+  <!-- Add an element to display validation error message -->
+  <div id="email-error" style="color: red;"></div>
+</form>
+
+<script>
+  // Get the email input element
+  const emailInput = document.querySelector("#email");
+
+  // Helper function to validate and show error for email field
+  function validateEmail() {
+    const emailValue = emailInput.value;
+
+    if (!isValidEmail(emailValue)) {
+      document.getElementById('email-error').textContent = 'Invalid email address';
+      emailInput.classList.add('error');
+    } else {
+      document.getElementById('email-error').textContent = '';
+      emailInput.classList.remove('error');
+    }
+  }
+
+  // Regular expression to validate email address
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // Trigger validation when the user leaves focus from the email input field
+  emailInput.addEventListener('blur', validateEmail);
+
+  // Validate email field when the form is submitted
+  document.querySelector("form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    validateEmail();
+  });
+</script>
+
+</body>
+</html>
