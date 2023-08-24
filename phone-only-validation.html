@@ -29,7 +29,7 @@
     const selectedCountry = iti.getSelectedCountryData();
     const phoneValue = input.value;
     const countryCode = selectedCountry.dialCode;
-    const expectedLength = selectedCountry.nationalNumber.length;
+    const expectedLength = selectedCountry.nationalNumber ? selectedCountry.nationalNumber.length : 0;
 
     if (!isValid) {
       document.getElementById('phone-error').textContent = 'Invalid phone number';
