@@ -36,29 +36,23 @@
     "+44": 10,
   };
 
-  // Keep track of whether the country dropdown is being clicked
-  let isCountryDropdownClicked = false;
+  // Override the default maxlength validation
+  input.removeAttribute('maxlength');
 
   // Helper function to validate and show error for phone field
   function validatePhone() {
     const isValid = iti.isValidNumber();
     const selectedCountry = iti.getSelectedCountryData();
+    const phoneValue = input.value;
+    const countryCode = selectedCountry.dialCode;
+    const maxDigits = preferredCountriesMaxLength[countryCode];
 
-    if (!isValid || isCountryDropdownClicked) {
+    if (!isValid || (maxDigits && phoneValue.replace(countryCode, '').length > maxDigits)) {
       document.getElementById('phone-error').textContent = 'Invalid phone number';
       input.classList.add('error');
     } else {
-      const phoneValue = input.value;
-      const countryCode = selectedCountry.dialCode;
-      const maxDigits = preferredCountriesMaxLength[countryCode];
-      
-      if (maxDigits && phoneValue.replace(countryCode, '').length > maxDigits) {
-        document.getElementById('phone-error').textContent = `Phone number is too long for ${selectedCountry.name}`;
-        input.classList.add('error');
-      } else {
-        document.getElementById('phone-error').textContent = '';
-        input.classList.remove('error');
-      }
+      document.getElementById('phone-error').textContent = '';
+      input.classList.remove('error');
     }
   }
 
@@ -69,15 +63,6 @@
   document.querySelector("form").addEventListener("submit", function (event) {
     event.preventDefault();
     validatePhone();
-  });
-
-  // Detect clicks on the country dropdown
-  document.querySelector(".iti__selected-flag").addEventListener("click", function () {
-    isCountryDropdownClicked = true;
-    setTimeout(function () {
-      isCountryDropdownClicked = false;
-      validatePhone();
-    }, 100);
   });
 </script>
 
