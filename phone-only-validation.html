@@ -35,16 +35,8 @@
     }
   }
 
-  // Listen for the "input" event to update the phone validation
-  input.addEventListener('input', validatePhone);
-
-  // Validate phone field onBlur and when clicking elsewhere on the page
-  document.addEventListener('click', function (event) {
-    const isPhoneInput = event.target === input || input.contains(event.target);
-    if (!isPhoneInput) {
-      validatePhone();
-    }
-  });
+  // Trigger validation when the user leaves focus from the phone input field
+  input.addEventListener('blur', validatePhone);
 
   // Validate phone field when the form is submitted
   document.querySelector("form").addEventListener("submit", function (event) {
