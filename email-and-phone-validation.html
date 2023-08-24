@@ -4,7 +4,7 @@
   <!-- Include the intlTelInput library CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 </head>
-  <body>
+<body>
 
 <form id="existing-form">
   <label for="name">Name:</label>
@@ -39,6 +39,7 @@
 
   // Helper function to validate and show error for phone field
   function validatePhone() {
+    console.log('Validating phone...');
     if (iti.isValidNumber()) {
       phoneError.textContent = '';
       input.classList.remove('error');
@@ -49,22 +50,24 @@
   }
 
   function validateEmail() {
-  const emailInput = document.getElementById('email');
-  const emailValue = emailInput.value;
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    console.log('Validating email...');
+    const emailInput = document.getElementById('email');
+    const emailValue = emailInput.value;
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-  if (!emailRegex.test(emailValue)) {
-    emailError.textContent = 'Invalid email address';
-  } else {
-    emailError.textContent = '';
+    if (!emailRegex.test(emailValue)) {
+      emailError.textContent = 'Invalid email address';
+    } else {
+      emailError.textContent = '';
+    }
   }
-}
 
   // Trigger validation when the user leaves focus from the phone input field
   input.addEventListener('blur', validatePhone);
 
   // Input mask for preferred countries
   input.addEventListener('input', function() {
+    console.log('Input changed...');
     const selectedCountry = iti.getSelectedCountryData();
     if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
       const value = input.value;
@@ -75,9 +78,9 @@
     }
   });
 
-    // Apply input mask based on country ISO2
-    function applyInputMask(countryIso2, value) {
-    console.log('Applying input mask');
+  // Apply input mask based on country ISO2
+  function applyInputMask(countryIso2, value) {
+    console.log('Applying input mask...');
     if (countryIso2 === "ae") {
       return applyUAEInputMask(value);
     } else if (countryIso2 === "qa" || countryIso2 === "om") {
