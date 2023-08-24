@@ -36,12 +36,15 @@
     "+44": 10,
   };
 
+  // Keep track of whether the country dropdown is being clicked
+  let isCountryDropdownClicked = false;
+
   // Helper function to validate and show error for phone field
   function validatePhone() {
     const isValid = iti.isValidNumber();
     const selectedCountry = iti.getSelectedCountryData();
 
-    if (!isValid) {
+    if (!isValid || isCountryDropdownClicked) {
       document.getElementById('phone-error').textContent = 'Invalid phone number';
       input.classList.add('error');
     } else {
@@ -66,6 +69,15 @@
   document.querySelector("form").addEventListener("submit", function (event) {
     event.preventDefault();
     validatePhone();
+  });
+
+  // Detect clicks on the country dropdown
+  document.querySelector(".iti__selected-flag").addEventListener("click", function () {
+    isCountryDropdownClicked = true;
+    setTimeout(function () {
+      isCountryDropdownClicked = false;
+      validatePhone();
+    }, 100);
   });
 </script>
 
