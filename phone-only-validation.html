@@ -26,8 +26,28 @@
   // Helper function to validate and show error for phone field
   function validatePhone() {
     const isValid = iti.isValidNumber();
+    const selectedCountry = iti.getSelectedCountryData();
+
     if (!isValid) {
-      document.getElementById('phone-error').textContent = 'Invalid phone number';
+      const errorCode = iti.getValidationError();
+      let errorMessage = '';
+
+      switch (errorCode) {
+        case window.intlTelInputUtils.validationError.TOO_SHORT:
+          errorMessage = `Phone number is too short for ${selectedCountry.name}`;
+          break;
+        case window.intlTelInputUtils.validationError.TOO_LONG:
+          errorMessage = `Phone number is too long for ${selectedCountry.name}`;
+          break;
+        case window.intlTelInputUtils.validationError.INVALID_COUNTRY_CODE:
+          errorMessage = `Invalid country code for ${selectedCountry.name}`;
+          break;
+        default:
+          errorMessage = 'Invalid phone number';
+          break;
+      }
+
+      document.getElementById('phone-error').textContent = errorMessage;
       input.classList.add('error');
     } else {
       document.getElementById('phone-error').textContent = '';
