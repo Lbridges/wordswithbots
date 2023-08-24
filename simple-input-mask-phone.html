@@ -17,10 +17,11 @@
 <!-- Include the intlTelInput library script -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 <script>
-  // Initialize intl-tel-input on the phone input field
+  // Initialize intl-tel-input on the phone input field with preferred countries
   const input = document.querySelector("#phone");
   const iti = window.intlTelInput(input, {
     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
+    preferredCountries: ["ae", "qa", "om"]
   });
 
   // Get the error message element
@@ -41,10 +42,9 @@
   input.addEventListener('blur', validatePhone);
 
   // Input mask for preferred countries
-  const preferredCountries = ["AE", "QA", "OM"];
   input.addEventListener('input', function() {
     const selectedCountry = iti.getSelectedCountryData();
-    if (preferredCountries.includes(selectedCountry.iso2)) {
+    if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
       const value = input.value;
       const maskedValue = applyInputMask(selectedCountry.iso2, value);
       if (value !== maskedValue) {
@@ -55,9 +55,9 @@
 
   // Apply input mask based on country ISO2
   function applyInputMask(countryIso2, value) {
-    if (countryIso2 === "AE") {
+    if (countryIso2 === "ae") {
       return applyUAEInputMask(value);
-    } else if (countryIso2 === "QA" || countryIso2 === "OM") {
+    } else if (countryIso2 === "qa" || countryIso2 === "om") {
       return applyQatarOmanInputMask(value);
     }
     return value;
