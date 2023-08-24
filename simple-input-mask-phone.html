@@ -1,5 +1,30 @@
-<!-- ... Existing code ... -->
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include the intlTelInput library CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.min.css">
+</head>
+<body>
 
+<form id="existing-form">
+  <label for="name">Name:</label>
+  <input type="text" id="name" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" required>
+  <div id="email-error" style="color: red;"></div>
+
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" placeholder="">
+  <div id="phone-error" style="color: red;"></div>
+
+  <!-- Other existing form fields... -->
+
+  <button type="submit">Submit</button>
+</form>
+
+<!-- Include the intlTelInput library script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 <script>
   // Initialize intl-tel-input on the phone input field with preferred countries
   const input = document.querySelector("#phone");
@@ -8,8 +33,9 @@
     preferredCountries: ["ae", "qa", "om"]
   });
 
-  // Get the error message element
+  // Get error message elements
   const phoneError = document.getElementById('phone-error');
+  const emailError = document.getElementById('email-error');
 
   // Helper function to validate and show error for phone field
   function validatePhone() {
@@ -22,17 +48,26 @@
     }
   }
 
+  // Helper function to validate and show error for email field
+  function validateEmail() {
+    const emailInput = document.getElementById('email');
+    const isValidEmail = emailInput.checkValidity();
+    if (!isValidEmail) {
+      emailError.textContent = 'Invalid email address';
+    } else {
+      emailError.textContent = '';
+    }
+  }
+
   // Trigger validation when the user leaves focus from the phone input field
   input.addEventListener('blur', validatePhone);
 
   // Input mask for preferred countries
   input.addEventListener('input', function() {
-    console.log('Input event triggered');
     const selectedCountry = iti.getSelectedCountryData();
     if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
       const value = input.value;
       const maskedValue = applyInputMask(selectedCountry.iso2, value);
-      console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
       if (value !== maskedValue) {
         input.value = maskedValue;
       }
@@ -41,17 +76,22 @@
 
   // Apply input mask based on country ISO2
   function applyInputMask(countryIso2, value) {
-    console.log('Applying input mask');
-    if (countryIso2 === "ae") {
-      return applyUAEInputMask(value);
-    } else if (countryIso2 === "qa" || countryIso2 === "om") {
-      return applyQatarOmanInputMask(value);
-    }
-    return value;
+    // ... Input mask logic ...
+
+    return value; // Return the masked value
   }
 
-  // ... Rest of the code ...
+  // Prevent submitting the form if there are validation errors
+  document.querySelector("#existing-form").addEventListener('submit', function(event) {
+    validatePhone(); // Validate phone input
+    validateEmail(); // Validate email input
+
+    if (!iti.isValidNumber() || !document.getElementById('email').checkValidity()) {
+      event.preventDefault(); // Prevent form submission
+    }
+  });
 
 </script>
 
-<!-- ... Rest of the HTML ... -->
+</body>
+</html>
