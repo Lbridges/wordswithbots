@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include the intlTelInput library CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.min.css">
+</head>
+<body>
+
+<form>
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" placeholder="">
+
+  <!-- Add an element to display validation error message -->
+  <div id="phone-error" style="color: red;"></div>
+</form>
+
+<!-- Include the intlTelInput library script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
+<script>
+  // Initialize intl-tel-input on the phone input field
+  const input = document.querySelector("#phone");
+  const iti = window.intlTelInput(input, {
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
+  });
+
+  // Get the error message element
+  const phoneError = document.getElementById('phone-error');
+
+  // Helper function to validate and show error for phone field
+  function validatePhone() {
+    if (iti.isValidNumber()) {
+      phoneError.textContent = '';
+      input.classList.remove('error');
+    } else {
+      phoneError.textContent = 'Invalid phone number';
+      input.classList.add('error');
+    }
+  }
+
+  // Trigger validation when the user leaves focus from the phone input field
+  input.addEventListener('blur', validatePhone);
+
+  // Input mask for preferred countries
+  const preferredCountries = ["AE", "QA", "OM"];
+  input.addEventListener('input', function() {
+    const selectedCountry = iti.getSelectedCountryData();
+    if (preferredCountries.includes(selectedCountry.iso2)) {
+      const value = input.value;
+      const maskedValue = applyInputMask(selectedCountry.iso2, value);
+      if (value !== maskedValue) {
+        input.value = maskedValue;
+      }
+    }
+  });
+
+  // Apply input mask based on country ISO2
+  function applyInputMask(countryIso2, value) {
+    if (countryIso2 === "AE") {
+      return applyUAEInputMask(value);
+    } else if (countryIso2 === "QA" || countryIso2 === "OM") {
+      return applyQatarOmanInputMask(value);
+    }
+    return value;
+  }
+
+  // Input mask for United Arab Emirates (050 123 4567)
+  function applyUAEInputMask(value) {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
+      .trim();
+  }
+
+  // Input mask for Qatar and Oman (3312 3456)
+  function applyQatarOmanInputMask(value) {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{4})(\d{4})$/, "$1 $2")
+      .trim();
+  }
+</script>
+
+</body>
+</html>
