@@ -6,28 +6,33 @@
 </head>
 <body>
 
-<form>
+<form id="existing-form">
+  <label for="name">Name:</label>
+  <input type="text" id="name" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" required>
+  <div id="email-error" style="color: red;"></div>
+
   <label for="phone">Phone:</label>
   <input type="tel" id="phone" placeholder="">
-
-  <!-- Add an element to display validation error message -->
   <div id="phone-error" style="color: red;"></div>
+
+  <button type="submit">Submit</button>
 </form>
 
 <!-- Include the intlTelInput library script -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 <script>
-  // Initialize intl-tel-input on the phone input field with preferred countries
   const input = document.querySelector("#phone");
   const iti = window.intlTelInput(input, {
     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
     preferredCountries: ["ae", "qa", "om"]
   });
 
-  // Get the error message element
   const phoneError = document.getElementById('phone-error');
+  const emailError = document.getElementById('email-error');
 
-  // Helper function to validate and show error for phone field
   function validatePhone() {
     if (iti.isValidNumber()) {
       phoneError.textContent = '';
@@ -38,49 +43,46 @@
     }
   }
 
-  // Trigger validation when the user leaves focus from the phone input field
-  input.addEventListener('blur', validatePhone);
+  function validateEmail() {
+    const emailInput = document.getElementById('email');
+    const isValidEmail = emailInput.checkValidity();
+    if (!isValidEmail) {
+      emailError.textContent = 'Invalid email address';
+    } else {
+      emailError.textContent = '';
+    }
+  }
 
-  // Input mask for preferred countries
+  input.addEventListener('blur', validatePhone);
   input.addEventListener('input', function() {
-    console.log('Input event triggered');
     const selectedCountry = iti.getSelectedCountryData();
     if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
       const value = input.value;
       const maskedValue = applyInputMask(selectedCountry.iso2, value);
-      console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
       if (value !== maskedValue) {
         input.value = maskedValue;
       }
     }
   });
 
-  // Apply input mask based on country ISO2
   function applyInputMask(countryIso2, value) {
-    console.log('Applying input mask');
-    if (countryIso2 === "ae") {
-      return applyUAEInputMask(value);
-    } else if (countryIso2 === "qa" || countryIso2 === "om") {
-      return applyQatarOmanInputMask(value);
+    // Input mask logic for preferred countries
+    if (["ae", "qa", "om"].includes(countryIso2)) {
+      // Apply input mask for qatar and oman
+      return value.replace(/\D/g, '').replace(/(\d{4})(\d{4})/, '$1 $2').substr(0, 9);
     }
-    return value;
+    return value; // Return the masked value
   }
 
-  // Input mask for United Arab Emirates (050 123 4567)
-  function applyUAEInputMask(value) {
-    return value
-      .replace(/\D/g, "")
-      .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
-      .trim();
-  }
+  document.querySelector("#existing-form").addEventListener('submit', function(event) {
+    validatePhone();
+    validateEmail();
 
-  // Input mask for Qatar and Oman (3312 3456)
-  function applyQatarOmanInputMask(value) {
-    return value
-      .replace(/\D/g, "")
-      .replace(/^(\d{4})(\d{4})$/, "$1 $2")
-      .trim();
-  }
+    if (!iti.isValidNumber() || !document.getElementById('email').checkValidity()) {
+      event.preventDefault();
+    }
+  });
+
 </script>
 
 </body>
