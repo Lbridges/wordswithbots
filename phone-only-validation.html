@@ -23,32 +23,22 @@
     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js",
   });
 
-  // Preferred countries and their corresponding max lengths
-  const preferredCountriesMaxLength = {
-    "+971": 9,
-    "+974": 8,
-    "+968": 8,
-    "+33": 10,
-    "+49": 11,
-    "+39": 10,
-    "+47": 12,
-    "+41": null, // No specific max length
-    "+44": 10,
-  };
-
-  // Override the default maxlength validation
-  input.removeAttribute('maxlength');
-
   // Helper function to validate and show error for phone field
   function validatePhone() {
     const isValid = iti.isValidNumber();
     const selectedCountry = iti.getSelectedCountryData();
     const phoneValue = input.value;
     const countryCode = selectedCountry.dialCode;
-    const maxDigits = preferredCountriesMaxLength[countryCode];
+    const expectedLength = selectedCountry.nationalNumber.length;
 
-    if (!isValid || (maxDigits && phoneValue.replace(countryCode, '').length > maxDigits)) {
+    if (!isValid) {
       document.getElementById('phone-error').textContent = 'Invalid phone number';
+      input.classList.add('error');
+    } else if (phoneValue.replace(countryCode, '').length < expectedLength) {
+      document.getElementById('phone-error').textContent = `Phone number is too short for ${selectedCountry.name}`;
+      input.classList.add('error');
+    } else if (phoneValue.replace(countryCode, '').length > expectedLength) {
+      document.getElementById('phone-error').textContent = `Phone number is too long for ${selectedCountry.name}`;
       input.classList.add('error');
     } else {
       document.getElementById('phone-error').textContent = '';
