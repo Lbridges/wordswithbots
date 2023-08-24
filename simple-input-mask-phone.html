@@ -44,14 +44,17 @@
   }
 
   function validateEmail() {
-    const emailInput = document.getElementById('email');
-    const isValidEmail = emailInput.checkValidity();
-    if (!isValidEmail) {
-      emailError.textContent = 'Invalid email address';
-    } else {
-      emailError.textContent = '';
-    }
+  const emailInput = document.getElementById('email');
+  const emailValue = emailInput.value;
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+  if (!emailRegex.test(emailValue)) {
+    emailError.textContent = 'Invalid email address';
+  } else {
+    emailError.textContent = '';
   }
+}
+
 
   input.addEventListener('blur', validatePhone);
   input.addEventListener('input', function() {
