@@ -39,7 +39,6 @@
 
   // Helper function to validate and show error for phone field
   function validatePhone() {
-    console.log('Validating phone...');
     if (iti.isValidNumber()) {
       phoneError.textContent = '';
       input.classList.remove('error');
@@ -49,8 +48,8 @@
     }
   }
 
+  // Helper function to validate and show error for email field
   function validateEmail() {
-    console.log('Validating email...');
     const emailInput = document.getElementById('email');
     const emailValue = emailInput.value;
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -64,6 +63,15 @@
 
   // Trigger validation when the user leaves focus from the phone input field
   input.addEventListener('blur', validatePhone);
+
+  // Trigger validation when the email input field loses focus or the user clicks away
+  const emailInput = document.getElementById('email');
+  emailInput.addEventListener('blur', validateEmail);
+  document.addEventListener('click', function(event) {
+    if (event.target !== emailInput) {
+      validateEmail();
+    }
+  });
 
   // Input mask for preferred countries
   input.addEventListener('input', function() {
@@ -104,109 +112,6 @@
       .replace(/^(\d{4})(\d{4})$/, "$1 $2")
       .trim();
   }
-
-  // Prevent submitting the form if there are validation errors
-  document.querySelector("#existing-form").addEventListener('submit', function(event) {
-    validatePhone(); // Validate phone input
-    validateEmail(); // Validate email input
-
-    if (!iti.isValidNumber() || !document.getElementById('email').checkValidity()) {
-      event.preventDefault(); // Prevent form submission
-    }
-  });
-
-</script>
-
-</body>
-</html>
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- Include the intlTelInput library CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
-</head>
-<body>
-
-<form id="existing-form">
-  <label for="name">Name:</label>
-  <input type="text" id="name" required>
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" required>
-  <div id="email-error" style="color: red;"></div>
-
-  <label for="phone">Phone:</label>
-  <input type="tel" id="phone" placeholder="">
-  <div id="phone-error" style="color: red;"></div>
-
-  <!-- Other existing form fields... -->
-
-  <button type="submit">Submit</button>
-</form>
-
-<!-- Include the intlTelInput library script -->
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-<script>
-  // Initialize intl-tel-input on the phone input field with preferred countries
-  const input = document.querySelector("#phone");
-  const iti = window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
-    preferredCountries: ["ae", "qa", "om"]
-  });
-
-  // Get error message elements
-  const phoneError = document.getElementById('phone-error');
-  const emailError = document.getElementById('email-error');
-
-  // Helper function to validate and show error for phone field
-  function validatePhone() {
-    if (iti.isValidNumber()) {
-      phoneError.textContent = '';
-      input.classList.remove('error');
-    } else {
-      phoneError.textContent = 'Invalid phone number';
-      input.classList.add('error');
-    }
-  }
-
-  // Helper function to validate and show error for email field
-  function validateEmail() {
-    const emailInput = document.getElementById('email');
-    const emailValue = emailInput.value;
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
-    if (!emailRegex.test(emailValue)) {
-      emailError.textContent = 'Invalid email address';
-    } else {
-      emailError.textContent = '';
-    }
-  }
-
-  // Trigger validation when the user leaves focus from the phone input field
-  input.addEventListener('blur', validatePhone);
-
-  // Trigger validation when the email input field loses focus or the user clicks away
-  const emailInput = document.getElementById('email');
-  emailInput.addEventListener('blur', validateEmail);
-  document.addEventListener('click', function(event) {
-    if (event.target !== emailInput) {
-      validateEmail();
-    }
-  });
-
-  // Input mask for preferred countries
-  input.addEventListener('input', function() {
-    // ...
-    // Input masking logic remains unchanged
-    // ...
-  });
 
   // Prevent submitting the form if there are validation errors
   document.querySelector("#existing-form").addEventListener('submit', function(event) {
