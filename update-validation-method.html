@@ -127,4 +127,20 @@
   const requiredInputs = document.querySelectorAll('input[required], select[required]');
   requiredInputs.forEach(input => {
     input.addEventListener('input', function() {
-      const isValid
+      const isValid = iti.isPossibleNumber() &&
+        emailInput.checkValidity() &&
+        countrySelect.checkValidity() &&
+        requiredInputsValid(requiredInputs);
+
+      submitBtn.disabled = !isValid;
+    });
+  });
+
+  // Function to check if all required inputs are valid
+  function requiredInputsValid(inputs) {
+    return Array.from(inputs).every(input => input.checkValidity());
+  }
+</script>
+
+</body>
+</html>
