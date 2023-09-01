@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include the intlTelInput library CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+</head>
+<body>
+
+<form id="existing-form">
+  <label for="name">Name:</label>
+  <input type="text" id="name" required>
+  <div id="name-error" style="color: red;"></div>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" required>
+  <div id="email-error" style="color: red;"></div>
+
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" placeholder="">
+  <div id="phone-error" style="color: red;"></div>
+
+  <label for="country">Country:</label>
+  <select id="country" required>
+    <option value="">Please select your country of residence</option>
+    <!-- Add your country options here -->
+  </select>
+  <div id="country-error" style="color: red;"></div>
+
+  <!-- Other existing form fields... -->
+
+  <button type="submit" id="infoFormButton" disabled>Submit</button>
+</form>
+
+<!-- Include the intlTelInput library script -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+  // Initialize intl-tel-input on the phone input field with preferred countries
+  const input = document.querySelector("#phone");
+  const iti = window.intlTelInput(input, {
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+    preferredCountries: ["ae", "qa", "om"]
+  });
+
+  // Get error message elements
+  const phoneError = document.getElementById('phone-error');
+  const emailError = document.getElementById('email-error');
+  const nameError = document.getElementById('name-error');
+  const countryError = document.getElementById('country-error');
+  const submitBtn = document.getElementById('infoFormButton');
+
+  // Helper function to validate and show error for phone field
+  function validatePhone() {
+    if (iti.isPossibleNumber()) {
+      phoneError.textContent = '';
+      input.classList.remove('error');
+    } else {
+      phoneError.textContent = 'Invalid phone number';
+      input.classList.add('error');
+    }
+  }
+
+  // Helper function to validate and show error for email field
+  function validateEmail() {
+    const emailInput = document.getElementById('email');
+    const emailValue = emailInput.value;
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+    if (!emailRegex.test(emailValue)) {
+      emailError.textContent = 'Invalid email address';
+      emailInput.classList.add('error');
+    } else {
+      emailError.textContent = '';
+      emailInput.classList.remove('error');
+    }
+  }
+
+  // Trigger validation when the user leaves focus from the phone input field
+  input.addEventListener('blur', validatePhone);
+
+  // Input mask for preferred countries
+  input.addEventListener('input', function() {
+    // ...
+    // Input masking logic remains unchanged
+    // ...
+  });
+
+  // Apply input mask based on country ISO2
+  function applyInputMask(countryIso2, value) {
+    // ...
+    // Input mask functions remain unchanged
+    // ...
+  }
+
+  // Custom validation function for the Country dropdown
+  function validateCountry() {
+    const countrySelect = document.getElementById('country');
+    if (countrySelect.value === '') {
+      countryError.textContent = 'Please select your country of residence';
+      countrySelect.classList.add('error');
+    } else {
+      countryError.textContent = '';
+      countrySelect.classList.remove('error');
+    }
+  }
+
+  // Trigger validation when the user changes the selected country
+  const countrySelect = document.getElementById('country');
+  countrySelect.addEventListener('change', validateCountry);
+
+  // Handle form submission
+  document.querySelector("#existing-form").addEventListener('submit', function(event) {
+    validatePhone();
+    validateEmail();
+    validateCountry();
+    
+    // Check if all required fields are valid
+    const isValid = iti.isPossibleNumber() &&
+      emailInput.checkValidity() &&
+      countrySelect.checkValidity();
+    
+    if (!isValid) {
+      event.preventDefault(); // Prevent form submission
+    }
+  });
+
+  // Enable the submit button when all required fields are valid
+  const requiredInputs = document.querySelectorAll('input[required], select[required]');
+  requiredInputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const isValid
