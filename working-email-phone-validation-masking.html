@@ -86,4 +86,41 @@
 
 </script>
 
-<!-- snippet from post, keypress, and broken chackValidity function to be replaced -->
+<!-- snippet from post, keypress, and broken chackValidity function to be replaced 
+	$.post(formActionUrl, objToSend, function( data ) {
+				var resp = JSON.parse(data);
+				if (resp.result == "success"){
+                    digitalData.pageInfo.formOptIn = $("input[name='optin']").is(':checked') ? "TRUE" : "FALSE";
+                    //_satellite.track('form complete');
+                    thankUrl = "/landing/ppc-paris//thank-you/?loc=" + locParam + "&cid=" + cidParam + "&utm=" + utmParam;
+                    $(location).attr('href', thankUrl);
+				} else {
+                    $(window).scrollTop(0);
+                }
+			});
+			
+		});
+
+		
+		
+		// ENTER key triggers NEXT
+		$(document).keypress(function(event){
+		    if(event.keyCode == 13) { 
+		    	$("#infoFormButton").click();
+		    }
+		});
+
+		// if error on form submission, scroll to top 
+		// so tooltip is visible on screen
+		$("#infoFormButton").on("click", function(){
+			if($("#requestInfoForm")[0].checkValidity() ) {
+				// the form is valid
+			}else{
+				$(window).scrollTop(0);
+			}	
+		})
+	});
+
+-->
+
+
