@@ -142,5 +142,34 @@
   }
 </script>
 
+<!-- Extra country select script to combine with validation -->
+  <div class="form-check">
+            <script>
+                $("#addressCountryCode").change(function(){                    
+                    switch ($("select[name=addressCountryCode]").val()){
+                        case "France":
+                        case "Germany":
+                        case "Italy":
+                        case "Norway":
+                        case "Switzerland":
+                        case "United Kingdom":
+                            $("#optin_text_gdpr").css("display", "block");
+                        break;
+                        default:
+                        $("#optin_text_gdpr").css("display", "none");
+                    }
+                });
+            </script>
+                <div class="variableOptin" for="optin" id="optin_text_gdpr"><!-- this displays none by default -->
+                    <p>Data Protection:  Statement</p>
+                </div>
+            </div>
+  <!-- This needs to be added into the existing code -->
+  
+  
 </body>
+  
 </html>
+
+
+
