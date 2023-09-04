@@ -88,7 +88,10 @@
 
   // Trigger validation when the user changes the selected country
   const countrySelect = document.getElementById('country');
-  countrySelect.addEventListener('change', validateCountry);
+  countrySelect.addEventListener('change', function() {
+    validateCountry();
+    showGDPRText();
+  });
 
   // Handle form submission
   document.querySelector("#existing-form").addEventListener('submit', function(event) {
@@ -126,24 +129,18 @@
   }
 
   // GDPR Consent Logic in JavaScript
-  const countryDropdown = document.getElementById('country');
-  const optinTextGDPR = document.getElementById('optin_text_gdpr');
-
-  countryDropdown.addEventListener('change', function() {
-    const selectedCountry = countryDropdown.value;
-    if (isEUCountry(selectedCountry)) {
+  function showGDPRText() {
+    const countrySelect = document.getElementById('country');
+    const optinTextGDPR = document.getElementById('optin_text_gdpr');
+    const euCountries = ["France", "Germany", "Italy", "Norway", "Switzerland", "United Kingdom"];
+  
+    if (euCountries.includes(countrySelect.value)) {
       optinTextGDPR.style.display = 'block';
     } else {
       optinTextGDPR.style.display = 'none';
     }
-  });
-
-  // Helper function to check if a country is in the EU
-  function isEUCountry(countryCode) {
-    // Add country codes for EU countries as needed
-    const euCountries = ['FR', 'DE', 'IT', 'NO', 'CH', 'UK'];
-    return euCountries.includes(countryCode);
   }
+  
 </script>
 
 </body>
