@@ -54,7 +54,14 @@
     const countrySelect = document.getElementById('addressCountryCode');
     const countryError = document.getElementById('country-error');    
     const submitBtn = document.getElementById('infoFormButton');
-    
+
+    // Helper function to display error messages
+    function displayErrorMessage(inputElement, errorMessage) {
+      const errorElement = document.getElementById(`${inputElement.id}-error`);
+      errorElement.textContent = errorMessage;
+      inputElement.classList.add('error');
+    }
+  
     function validatePhone() {
         if (iti.isPossibleNumber()) {
             phoneError.textContent = '';
@@ -158,21 +165,19 @@
         }
     }
 
-    // Real-time validation for fname and lname
-    const nameInputs = document.querySelectorAll('name-input');
-    nameInputs.forEach(function(input) {
-        input.addEventListener('blur', function() {
-            const inputValue = input.value.trim();
-            const errorElement = document.getElementById(input.id + '-error');
-
-            if (inputValue.length === 0) {
-                errorElement.textContent = input.id === 'fname' ? 'First name cannot be left empty' : 'Last name cannot be empty';
-                input.classList.add('error');
-            } else {
-                errorElement.textContent = '';
-                input.classList.remove('error');
-            }
-        });
+     // Real-time validation for the name fields (First Name and Last Name)
+    const nameInputs = document.querySelectorAll('.name-input');
+    nameInputs.forEach(nameInput => {
+      nameInput.addEventListener('blur', function () {
+        const nameValue = nameInput.value.trim();
+        if (nameValue === '') {
+          displayErrorMessage(nameInput, 'This field cannot be left blank');
+        } else {
+          const errorElement = document.getElementById(`${nameInput.id}-error`);
+          errorElement.textContent = ''; // Clear any existing error message
+          nameInput.classList.remove('error');
+        }
+      });
     });
   
 </script>
