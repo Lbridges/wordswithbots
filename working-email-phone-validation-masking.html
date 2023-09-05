@@ -92,7 +92,7 @@
 				if (resp.result == "success"){
                     digitalData.pageInfo.formOptIn = $("input[name='optin']").is(':checked') ? "TRUE" : "FALSE";
                     //_satellite.track('form complete');
-                    thankUrl = "/landing/ppc-paris//thank-you/?loc=" + locParam + "&cid=" + cidParam + "&utm=" + utmParam;
+                    thankUrl = "//thank-you/?loc=" + locParam + "&cid=" + cidParam + "&utm=" + utmParam;
                     $(location).attr('href', thankUrl);
 				} else {
                     $(window).scrollTop(0);
