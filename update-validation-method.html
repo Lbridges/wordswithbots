@@ -123,16 +123,14 @@
       }
   }
 
-    // Custom validation function for the Country dropdown
-    function validateCountry() {        
-        if (countrySelect.value === '') {
-            countryError.textContent = 'Please select your country of residence';
-            countrySelect.classList.add('error');
-        } else {
-            countryError.textContent = '';
-            countrySelect.classList.remove('error');
-        }
-    }
+   function validateCountry() {        
+      if (countrySelect.value === '') {
+          displayErrorMessage(countryError, 'Please select your country of residence');
+      } else {
+          clearErrorMessage(countryError);
+      }
+  }
+
 
     // Trigger validation when the user changes the selected country
     countrySelect.addEventListener('change', function() {
