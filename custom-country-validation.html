@@ -17,19 +17,32 @@
   <div id="name-error"></div>
 
   <label for="email">Email:</label>
-  <input type="email" id="email">
+  <input type="email" id="emailAddress">
   <div id="email-error"></div>
 
   <label for="phone">Phone:</label>
-  <input type="tel" id="phone" placeholder="">
+  <input type="tel" id="phone">
   <div id="phone-error"></div>
 
   <label for="country">Country:</label>
   <select id="country">
     <option value="">Please select your country of residence</option>
-    <!-- Add your country options here -->
+    <option value="FR">France</option>
+    <option value="DE">Germany</option>
+    <option value="IT">Italy</option>
+    <option value="NO">Norway</option>
+    <option value="CH">Switzerland</option>
+    <option value="GB">United Kingdom</option>
+    <option value="US">United States</option>
+    <option value="CA">Canada</option>
+    <option value="AU">Australia</option>
+    <option value="JP">Japan</option>
   </select>
   <div id="country-error"></div>
+  <div id="optin_text_gdpr" style="display: none;">
+    By selecting a GDPR country, you agree to our GDPR terms.
+  </div>
+
 
   <!-- Other existing form fields... -->
 
@@ -56,11 +69,11 @@
    function validatePhone() {
         if (iti.isPossibleNumber()) {
             phoneError.textContent = '';
-            input.classList.remove('error');
+            input.classList.remove('error'); //is this necesary? why add and remove error class to input instead of error message beneath the input
             submitBtn.disabled = false;
         } else {
             phoneError.textContent = 'Invalid phone number';
-            input.classList.add('error');
+            input.classList.add('error'); //this is part of the piece whose necessity I questioned in the last comment
             submitBtn.disabled = true;
         }
     }
@@ -74,9 +87,9 @@
     if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
         const value = input.value;
         const maskedValue = applyInputMask(selectedCountry.iso2, value);
-        console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
+        //console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
         if (value !== maskedValue) {
-        input.value = maskedValue;
+          input.value = maskedValue;
         }
     }
     });
@@ -92,17 +105,17 @@
     }
     // Input mask for United Arab Emirates (050 123 4567)
     function applyUAEInputMask(value) {
-    return value
-        .replace(/\D/g, "")
-        .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
-        .trim();
+      return value
+          .replace(/\D/g, "")
+          .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
+          .trim();
     }
     // Input mask for Qatar and Oman (3312 3456)
     function applyQatarOmanInputMask(value) {
-    return value
-        .replace(/\D/g, "")
-        .replace(/^(\d{4})(\d{4})$/, "$1 $2")
-        .trim();
+      return value
+          .replace(/\D/g, "")
+          .replace(/^(\d{4})(\d{4})$/, "$1 $2")
+          .trim();
     }
     //EMAIL VALIDATION
     const emailInput = document.querySelector("#emailAddress");
@@ -111,11 +124,11 @@
 
         if (!isValidEmail(emailValue)) {
             document.getElementById('email-error').textContent = 'Invalid email address';
-            emailInput.classList.add('error');
+            emailInput.classList.add('error'); //is this necessary?
             submitBtn.disabled = true;
         } else {
             document.getElementById('email-error').textContent = '';
-            emailInput.classList.remove('error');
+            emailInput.classList.remove('error'); //is this necesary?
             submitBtn.disabled = false;
         }
     }
@@ -128,6 +141,32 @@
 
     // Trigger validation when the user leaves focus from the email input field
     emailInput.addEventListener('blur', validateEmail);
+
+    // COUNTRY VALIDATION
+    function validateCountry() {        
+        if (countrySelect.value === '') {
+            countryError.textContent = 'Please select your country of residence';
+            countrySelect.classList.add('error');
+            submitBtn.disabled = true;
+        } else {
+            countryError.textContent = '';
+            countrySelect.classList.remove('error');
+            submitBtn.disabled = false;
+            showGDPRText();
+        }
+    }
+
+    countrySelect.addEventListener('change', validateCountry);
+
+    function showGDPRText() {        
+        const euCountries = ["FR", "DE", "IT", "NO", "CH", "GB"];
+    
+        if (euCountries.includes(countrySelect.value)) {
+            optinTextGDPR.style.display = 'block';
+        } else {
+            optinTextGDPR.style.display = 'none';
+        }
+    }
 
   
 </script>
