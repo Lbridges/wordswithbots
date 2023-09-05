@@ -7,122 +7,173 @@
 <body>
 
 <form id="existing-form">
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
   <label for="name">Name:</label>
-  <input type="text" id="name" required>
-  <div id="name-error" style="color: red;"></div>
+  <input type="text" id="name" class="name-input" required>
+  <div id="name-error"></div>
 
   <label for="email">Email:</label>
   <input type="email" id="email" required>
-  <div id="email-error" style="color: red;"></div>
+  <div id="email-error"></div>
 
   <label for="phone">Phone:</label>
   <input type="tel" id="phone" placeholder="">
-  <div id="phone-error" style="color: red;"></div>
+  <div id="phone-error"></div>
 
   <label for="country">Country:</label>
   <select id="country" required>
     <option value="">Please select your country of residence</option>
     <!-- Add your country options here -->
   </select>
-  <div id="country-error" style="color: red;"></div>
+  <div id="country-error"></div>
 
   <!-- Other existing form fields... -->
 
   <button type="submit" id="infoFormButton" disabled>Submit</button>
 </form>
 
-<!-- Include the intlTelInput library script -->
+<!-- phone and email validation -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 <script>
-  // Initialize intl-tel-input on the phone input field with preferred countries
-  const input = document.querySelector("#phone");
-  const iti = window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
-    preferredCountries: ["ae", "qa", "om"]
-  });
-
-  // Get error message elements
-  const phoneError = document.getElementById('phone-error');
-  const emailError = document.getElementById('email-error');
-  const nameError = document.getElementById('name-error');
-  const countryError = document.getElementById('country-error');
-  const submitBtn = document.getElementById('infoFormButton');
-
-  // Helper function to validate and show error for phone field
-  function validatePhone() {
-    if (iti.isPossibleNumber()) {
-      phoneError.textContent = '';
-      input.classList.remove('error');
-    } else {
-      phoneError.textContent = 'Invalid phone number';
-      input.classList.add('error');
-    }
-  }
-
-  // Helper function to validate and show error for email field
-  function validateEmail() {
-    const emailInput = document.getElementById('email');
-    const emailValue = emailInput.value;
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
-    if (!emailRegex.test(emailValue)) {
-      emailError.textContent = 'Invalid email address';
-      emailInput.classList.add('error');
-    } else {
-      emailError.textContent = '';
-      emailInput.classList.remove('error');
-    }
-  }
-
-  // Custom validation function for the Country dropdown
-  function validateCountry() {
-    const countrySelect = document.getElementById('country');
-    if (countrySelect.value === '') {
-      countryError.textContent = 'Please select your country of residence';
-      countrySelect.classList.add('error');
-    } else {
-      countryError.textContent = '';
-      countrySelect.classList.remove('error');
-    }
-  }
-
-  // Trigger validation when the user changes the selected country
-  const countrySelect = document.getElementById('country');
-  countrySelect.addEventListener('change', function() {
-    validateCountry();
-    showGDPRText();
-  });
-
-  // Enable the submit button when all required fields are valid
-  const requiredInputs = document.querySelectorAll('input[required], select[required]');
-  requiredInputs.forEach(input => {
-    input.addEventListener('input', function() {
-      const isValid = iti.isPossibleNumber() &&
-        emailInput.checkValidity() &&
-        countrySelect.checkValidity() &&
-        requiredInputsValid(requiredInputs);
-
-      submitBtn.disabled = !isValid;
+    const input = document.querySelector("#daytimeTelephoneNumber");
+    const iti = window.intlTelInput(input, {
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+        preferredCountries: ["ae", "qa", "om"]
     });
-  });
 
-  // Function to check if all required inputs are valid
-  function requiredInputsValid(inputs) {
-    return Array.from(inputs).every(input => input.checkValidity());
-  }
-
-  // GDPR Consent Logic in JavaScript
-  function showGDPRText() {
-    const countrySelect = document.getElementById('country');
-    const optinTextGDPR = document.getElementById('optin_text_gdpr');
-    const euCountries = ["France", "Germany", "Italy", "Norway", "Switzerland", "United Kingdom"];
-  
-    if (euCountries.includes(countrySelect.value)) {
-      optinTextGDPR.style.display = 'block';
-    } else {
-      optinTextGDPR.style.display = 'none';
+    // Get error message elements
+    const phoneError = document.getElementById('phone-error');
+    const emailInput = document.getElementById('emailAddress');
+    const emailError = document.getElementById('email-error');
+    const fnameError = document.getElementById('fname-error');
+    const lnameError = document.getElementById('lname-error');
+    const countrySelect = document.getElementById('addressCountryCode');
+    const countryError = document.getElementById('country-error');    
+    const submitBtn = document.getElementById('infoFormButton');
+    
+    function validatePhone() {
+        if (iti.isPossibleNumber()) {
+            phoneError.textContent = '';
+            input.classList.remove('error');
+        } else {
+            phoneError.textContent = 'Invalid phone number';
+            input.classList.add('error');
+        }
     }
-  }
+
+    // Input mask for preferred countries
+    input.addEventListener('input', function() {
+    //console.log('Input event triggered');
+    const selectedCountry = iti.getSelectedCountryData();
+    if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
+        const value = input.value;
+        const maskedValue = applyInputMask(selectedCountry.iso2, value);
+        console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
+        if (value !== maskedValue) {
+        input.value = maskedValue;
+        }
+    }
+    });
+    // Apply input mask based on country ISO2
+    function applyInputMask(countryIso2, value) {
+        //console.log('Applying input mask');
+        if (countryIso2 === "ae") {
+            return applyUAEInputMask(value);
+        } else if (countryIso2 === "qa" || countryIso2 === "om") {
+            return applyQatarOmanInputMask(value);
+        }
+        return value;
+    }
+    // Input mask for United Arab Emirates (050 123 4567)
+    function applyUAEInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
+        .trim();
+    }
+    // Input mask for Qatar and Oman (3312 3456)
+    function applyQatarOmanInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{4})(\d{4})$/, "$1 $2")
+        .trim();
+    }
+    function validateEmail() {        
+        const emailValue = emailInput.value;
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+        if (!emailRegex.test(emailValue)) {
+            emailError.textContent = 'Invalid email address';
+            emailInput.classList.add('error');
+        } else {
+            emailError.textContent = '';
+            emailInput.classList.remove('error');
+        }
+    }
+
+    // Custom validation function for the Country dropdown
+    function validateCountry() {        
+        if (countrySelect.value === '') {
+            countryError.textContent = 'Please select your country of residence';
+            countrySelect.classList.add('error');
+        } else {
+            countryError.textContent = '';
+            countrySelect.classList.remove('error');
+        }
+    }
+
+    // Trigger validation when the user changes the selected country
+    countrySelect.addEventListener('change', function() {
+        validateCountry();
+        showGDPRText();
+    });
+    
+    // Enable the submit button when all required fields are valid
+    const requiredInputs = document.querySelectorAll('input[required], select[required]');
+    requiredInputs.forEach(input => {
+        input.addEventListener('input', function() {
+        const isValid = iti.isPossibleNumber() &&
+            emailInput.checkValidity() &&
+            countrySelect.checkValidity() &&
+            requiredInputsValid(requiredInputs);
+
+        submitBtn.disabled = !isValid;
+        });
+    });  
+
+    // GDPR Consent Logic in JavaScript
+    function showGDPRText() {
+        const countrySelect = document.getElementById('addressCountryCode');
+        const optinTextGDPR = document.getElementById('optin_text_gdpr');
+        const euCountries = ["France", "Germany", "Italy", "Norway", "Switzerland", "United Kingdom"];
+    
+        if (euCountries.includes(countrySelect.value)) {
+        optinTextGDPR.style.display = 'block';
+        } else {
+        optinTextGDPR.style.display = 'none';
+        }
+    }
+
+    // Real-time validation for fname and lname
+    const nameInputs = document.querySelectorAll('name-input');
+    nameInputs.forEach(function(input) {
+        input.addEventListener('blur', function() {
+            const inputValue = input.value.trim();
+            const errorElement = document.getElementById(input.id + '-error');
+
+            if (inputValue.length === 0) {
+                errorElement.textContent = input.id === 'fname' ? 'First name cannot be left empty' : 'Last name cannot be empty';
+                input.classList.add('error');
+            } else {
+                errorElement.textContent = '';
+                input.classList.remove('error');
+            }
+        });
+    });
   
 </script>
 
