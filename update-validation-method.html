@@ -63,15 +63,15 @@
     }
     
     function validatePhone() {
-    const phoneValue = input.value.trim();
-    if (phoneValue === '') {
-        displayErrorMessage(phoneError, 'Phone number cannot be left blank');
-    } else if (!iti.isPossibleNumber()) {
-        displayErrorMessage(phoneError, 'Invalid phone number');
-    } else {
-        clearErrorMessage(phoneError);
-    }
-}
+      const phoneValue = input.value.trim();
+      if (phoneValue === '') {
+          displayErrorMessage(phoneError, 'Phone number cannot be left blank');
+      } else if (!iti.isPossibleNumber()) {
+          displayErrorMessage(phoneError, 'Invalid phone number');
+      } else {
+          clearErrorMessage(phoneError);
+      }
+  }
 
     // Input mask for preferred countries
     input.addEventListener('input', function() {
