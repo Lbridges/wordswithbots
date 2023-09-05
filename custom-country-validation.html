@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include the intlTelInput library CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+</head>
+<body>
+
+<form id="existing-form">
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+  <label for="name">Name:</label>
+  <input type="text" id="name" class="name-input">
+  <div id="name-error"></div>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email">
+  <div id="email-error"></div>
+
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" placeholder="">
+  <div id="phone-error"></div>
+
+  <label for="country">Country:</label>
+  <select id="country">
+    <option value="">Please select your country of residence</option>
+    <!-- Add your country options here -->
+  </select>
+  <div id="country-error"></div>
+
+  <!-- Other existing form fields... -->
+
+  <button type="submit" id="infoFormButton" disabled>Submit</button>
+</form>
+
+<!-- phone and email validation -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+    const input = document.querySelector("#phone");
+    const iti = window.intlTelInput(input, {
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+        preferredCountries: ["ae", "qa", "om"]
+    });
+
+    // Get error message elements
+    const phoneError = document.getElementById('phone-error');
+    const emailInput = document.getElementById('emailAddress');
+    const emailError = document.getElementById('email-error');
+    const countrySelect = document.getElementById('country');
+    const countryError = document.getElementById('country-error');    
+    const submitBtn = document.getElementById('infoFormButton');
+    
+   function validatePhone() {
+        if (iti.isPossibleNumber()) {
+            phoneError.textContent = '';
+            input.classList.remove('error');
+            submitBtn.disabled = false;
+        } else {
+            phoneError.textContent = 'Invalid phone number';
+            input.classList.add('error');
+            submitBtn.disabled = true;
+        }
+    }
+    
+    input.addEventListener('blur', validatePhone);
+
+    // Input mask for preferred countries
+    input.addEventListener('input', function() {
+    //console.log('Input event triggered');
+    const selectedCountry = iti.getSelectedCountryData();
+    if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
+        const value = input.value;
+        const maskedValue = applyInputMask(selectedCountry.iso2, value);
+        console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
+        if (value !== maskedValue) {
+        input.value = maskedValue;
+        }
+    }
+    });
+    // Apply input mask based on country ISO2
+    function applyInputMask(countryIso2, value) {
+        //console.log('Applying input mask');
+        if (countryIso2 === "ae") {
+            return applyUAEInputMask(value);
+        } else if (countryIso2 === "qa" || countryIso2 === "om") {
+            return applyQatarOmanInputMask(value);
+        }
+        return value;
+    }
+    // Input mask for United Arab Emirates (050 123 4567)
+    function applyUAEInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
+        .trim();
+    }
+    // Input mask for Qatar and Oman (3312 3456)
+    function applyQatarOmanInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{4})(\d{4})$/, "$1 $2")
+        .trim();
+    }
+    //EMAIL VALIDATION
+    const emailInput = document.querySelector("#emailAddress");
+    function validateEmail() {
+        const emailValue = emailInput.value;
+
+        if (!isValidEmail(emailValue)) {
+            document.getElementById('email-error').textContent = 'Invalid email address';
+            emailInput.classList.add('error');
+            submitBtn.disabled = true;
+        } else {
+            document.getElementById('email-error').textContent = '';
+            emailInput.classList.remove('error');
+            submitBtn.disabled = false;
+        }
+    }
+
+    // Regular expression to validate email address
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Trigger validation when the user leaves focus from the email input field
+    emailInput.addEventListener('blur', validateEmail);
+
+  
+</script>
+
+</body>
+</html>
