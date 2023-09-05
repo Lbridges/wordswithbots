@@ -61,7 +61,7 @@
       errorElement.textContent = errorMessage;
       inputElement.classList.add('error');
     }
-  
+    
     function validatePhone() {
         if (iti.isPossibleNumber()) {
             phoneError.textContent = '';
@@ -79,7 +79,7 @@
     if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
         const value = input.value;
         const maskedValue = applyInputMask(selectedCountry.iso2, value);
-        console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
+        //console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
         if (value !== maskedValue) {
         input.value = maskedValue;
         }
@@ -112,7 +112,6 @@
     function validateEmail() {        
         const emailValue = emailInput.value;
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
         if (!emailRegex.test(emailValue)) {
             emailError.textContent = 'Invalid email address';
             emailInput.classList.add('error');
@@ -153,8 +152,7 @@
     });  
 
     // GDPR Consent Logic in JavaScript
-    function showGDPRText() {
-        const countrySelect = document.getElementById('addressCountryCode');
+    function showGDPRText() {        
         const optinTextGDPR = document.getElementById('optin_text_gdpr');
         const euCountries = ["France", "Germany", "Italy", "Norway", "Switzerland", "United Kingdom"];
     
@@ -168,18 +166,18 @@
      // Real-time validation for the name fields (First Name and Last Name)
     const nameInputs = document.querySelectorAll('.name-input');
     nameInputs.forEach(nameInput => {
-      nameInput.addEventListener('blur', function () {
-        const nameValue = nameInput.value.trim();
-        if (nameValue === '') {
-          displayErrorMessage(nameInput, 'This field cannot be left blank');
-        } else {
-          const errorElement = document.getElementById(`${nameInput.id}-error`);
-          errorElement.textContent = ''; // Clear any existing error message
-          nameInput.classList.remove('error');
-        }
-      });
+        nameInput.addEventListener('blur', function () {
+            const nameValue = nameInput.value.trim();
+            if (nameValue === '') {
+                displayErrorMessage(nameInput, 'This field cannot be left blank');
+            } else {
+                const errorElement = document.getElementById(`${nameInput.id}-error`);
+                errorElement.textContent = ''; // Clear any existing error message
+                nameInput.classList.remove('error');
+            }
+        });
     });
-  
+
 </script>
 
 </body>
