@@ -93,23 +93,6 @@
     showGDPRText();
   });
 
-  // Handle form submission
-  document.querySelector("#existing-form").addEventListener('submit', function(event) {
-    validatePhone();
-    validateEmail();
-    validateCountry();
-    
-    // Check if all required fields are valid
-    const isValid = iti.isPossibleNumber() &&
-      emailInput.checkValidity() &&
-      countrySelect.checkValidity() &&
-      requiredInputsValid(requiredInputs);
-
-    if (!isValid) {
-      event.preventDefault(); // Prevent form submission
-    }
-  });
-
   // Enable the submit button when all required fields are valid
   const requiredInputs = document.querySelectorAll('input[required], select[required]');
   requiredInputs.forEach(input => {
