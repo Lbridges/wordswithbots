@@ -163,20 +163,23 @@
         }
     }
 
-     // Real-time validation for the name fields (First Name and Last Name)
+    // Real-time validation for the name fields (First Name and Last Name)   
     const nameInputs = document.querySelectorAll('.name-input');
     nameInputs.forEach(nameInput => {
         nameInput.addEventListener('blur', function () {
             const nameValue = nameInput.value.trim();
+            const errorElement = document.getElementById(`${nameInput.id}-error`);
+    
             if (nameValue === '') {
-                displayErrorMessage(nameInput, 'This field cannot be left blank');
+                displayErrorMessage(errorElement, 'This field cannot be left blank');
+                nameInput.classList.add('error');
             } else {
-                const errorElement = document.getElementById(`${nameInput.id}-error`);
                 errorElement.textContent = ''; // Clear any existing error message
                 nameInput.classList.remove('error');
             }
         });
     });
+
   
   // Function to clear error messages
   function clearErrorMessage(errorElement) {
