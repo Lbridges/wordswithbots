@@ -63,14 +63,15 @@
     }
     
     function validatePhone() {
-        if (iti.isPossibleNumber()) {
-            phoneError.textContent = '';
-            input.classList.remove('error');
-        } else {
-            phoneError.textContent = 'Invalid phone number';
-            input.classList.add('error');
-        }
+    const phoneValue = input.value.trim();
+    if (phoneValue === '') {
+        displayErrorMessage(phoneError, 'Phone number cannot be left blank');
+    } else if (!iti.isPossibleNumber()) {
+        displayErrorMessage(phoneError, 'Invalid phone number');
+    } else {
+        clearErrorMessage(phoneError);
     }
+}
 
     // Input mask for preferred countries
     input.addEventListener('input', function() {
@@ -109,17 +110,18 @@
         .replace(/^(\d{4})(\d{4})$/, "$1 $2")
         .trim();
     }
+    
     function validateEmail() {        
-        const emailValue = emailInput.value;
-        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-        if (!emailRegex.test(emailValue)) {
-            emailError.textContent = 'Invalid email address';
-            emailInput.classList.add('error');
-        } else {
-            emailError.textContent = '';
-            emailInput.classList.remove('error');
-        }
-    }
+      const emailValue = emailInput.value.trim();
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (emailValue === '') {
+          displayErrorMessage(emailError, 'Email address cannot be left blank');
+      } else if (!emailRegex.test(emailValue)) {
+          displayErrorMessage(emailError, 'Invalid email address');
+      } else {
+          clearErrorMessage(emailError);
+      }
+  }
 
     // Custom validation function for the Country dropdown
     function validateCountry() {        
@@ -177,7 +179,11 @@
             }
         });
     });
-
+  
+  // Function to clear error messages
+  function clearErrorMessage(errorElement) {
+      errorElement.textContent = '';
+  }
 </script>
 
 </body>
