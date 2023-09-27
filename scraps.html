@@ -1,4 +1,8 @@
-<!-- pattern="^[A-Za-z]+['-]?[A-Za-z]+$" -->
+<!-- pattern="^[A-Za-z]+['-]?[A-Za-z]+$" 
+^[A-Za-z]+: This part ensures that the name starts with one or more alphabetic characters.
+['-]?: This part allows for an optional apostrophe (') or hyphen (-) in the name.
+[A-Za-z]+$: This part ensures that the name ends with one or more alphabetic characters.
+-->
 <input id="phone" type="tel">
 <button id="btn" type="button">Validate</button>
 <span id="valid-msg" class="hide">✓ Valid</span>
