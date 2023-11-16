@@ -1,0 +1,88 @@
+<!-- phone and email validation -->
+<script src="/wp-content/themes/mvc_me/js/intlTelInput.min.js"></script>
+<script>
+    const input = document.querySelector("#daytimeTelephoneNumber");
+    const iti = window.intlTelInput(input, {
+        utilsScript: "/wp-content/themes/mvc_me/js/utils.js",
+        preferredCountries: ["ae", "qa", "om"]
+    });
+
+    const submitBtn = document.getElementById('infoFormButton');
+    const phoneError = document.getElementById('phone-error');
+    function validatePhone() {
+        if (iti.isPossibleNumber()) {
+            phoneError.textContent = '';
+            input.classList.remove('error');
+            submitBtn.disabled = false;
+        } else {
+            phoneError.textContent = 'Invalid phone number';
+            input.classList.add('error');
+            submitBtn.disabled = true;
+        }
+    }
+    
+    input.addEventListener('blur', validatePhone);
+
+    // Input mask for preferred countries
+    input.addEventListener('input', function() {
+    //console.log('Input event triggered');
+    const selectedCountry = iti.getSelectedCountryData();
+    if (["ae", "qa", "om"].includes(selectedCountry.iso2)) {
+        const value = input.value;
+        const maskedValue = applyInputMask(selectedCountry.iso2, value);
+        console.log(`Original value: ${value}, Masked value: ${maskedValue}`);
+        if (value !== maskedValue) {
+        input.value = maskedValue;
+        }
+    }
+    });
+    // Apply input mask based on country ISO2
+    function applyInputMask(countryIso2, value) {
+        //console.log('Applying input mask');
+        if (countryIso2 === "ae") {
+            return applyUAEInputMask(value);
+        } else if (countryIso2 === "qa" || countryIso2 === "om") {
+            return applyQatarOmanInputMask(value);
+        }
+        return value;
+    }
+    // Input mask for United Arab Emirates (050 123 4567)
+    function applyUAEInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")
+        .trim();
+    }
+    // Input mask for Qatar and Oman (3312 3456)
+    function applyQatarOmanInputMask(value) {
+    return value
+        .replace(/\D/g, "")
+        .replace(/^(\d{4})(\d{4})$/, "$1 $2")
+        .trim();
+    }
+    //EMAIL VALIDATION
+    const emailInput = document.querySelector("#emailAddress");
+    function validateEmail() {
+        const emailValue = emailInput.value;
+
+        if (!isValidEmail(emailValue)) {
+            document.getElementById('email-error').textContent = 'Invalid email address';
+            emailInput.classList.add('error');
+            submitBtn.disabled = true;
+        } else {
+            document.getElementById('email-error').textContent = '';
+            emailInput.classList.remove('error');
+            submitBtn.disabled = false;
+        }
+    }
+
+    // Regular expression to validate email address
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Trigger validation when the user leaves focus from the email input field
+    emailInput.addEventListener('blur', validateEmail);
+
+</script>
