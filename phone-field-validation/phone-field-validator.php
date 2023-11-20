@@ -33,4 +33,13 @@ Modularity: The validation logic is encapsulated within the plugin, promoting a 
 Ease of Maintenance: If there are changes or enhancements to the validation process, you only need to update the plugin once, and the changes will propagate to all sites using the plugin.
 
 To summarize, creating a WordPress plugin for the phone field validation scripts is a practical and scalable solution, especially when the functionality needs to be shared across multiple sites with different themes.
+    
+ call file:   
+ const input = document.querySelector("#phone");
+const iti = window.intlTelInput(input, {
+    utilsScript: "<?php echo plugins_url('js/util.js', __FILE__); ?>",
+    // Other configuration options...
+});   
+    
+    
     */
