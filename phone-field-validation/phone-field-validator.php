@@ -18,6 +18,7 @@ function phone_validator_enqueue_scripts() {
 // Hook the function into WordPress
 add_action('wp_enqueue_scripts', 'phone_validator_enqueue_scripts');
 
+
 /*
 Given the requirement of sharing the phone field validation method across multiple sites with different themes, using a plugin becomes a sensible approach. A plugin allows for a modular and portable solution that can be easily implemented on various WordPress installations.
 
