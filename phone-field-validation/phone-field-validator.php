@@ -1,23 +1,22 @@
-<?php
-/**
- * Plugin Name: Phone Validator
- * Description: A simple phone input validator.
- * Version: 1.0
- * Author: MVW Development
- */
-
 // Enqueue JavaScript files
 function phone_validator_enqueue_scripts() {
-    // Enqueue util.js
-    wp_enqueue_script('util', plugins_url('js/utils.js', __FILE__), array(), '1.0', true);
+    // Check if jQuery is loaded
+    if (!wp_script_is('jquery', 'enqueued')) {
+        // If not, enqueue jQuery first
+        wp_enqueue_script('jquery');
+    }
 
-    // Enqueue intlTelInput.min.js 
-    wp_enqueue_script('intlTelInput', plugins_url('js/intlTelInput.min.js', __FILE__), array(), '1.0', true);
+    // Enqueue intlTelInput.min.js with jQuery as a dependency
+    wp_enqueue_script('intlTelInput', plugins_url('js/intlTelInput.min.js', __FILE__), array('jquery'), '1.0', true);
 
+    // Enqueue util.js with intlTelInput as a dependency
+    wp_enqueue_script('util', plugins_url('js/utils.js', __FILE__), array('intlTelInput'), '1.0', true);
 }
 
 // Hook the function into WordPress
 add_action('wp_enqueue_scripts', 'phone_validator_enqueue_scripts');
+
+
 
 /*
 Given the requirement of sharing the phone field validation method across multiple sites with different themes, using a plugin becomes a sensible approach. A plugin allows for a modular and portable solution that can be easily implemented on various WordPress installations.
