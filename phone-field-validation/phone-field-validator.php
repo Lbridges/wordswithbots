@@ -24,6 +24,9 @@ function phone_validator_enqueue_scripts() {
         'inputClass' => 'phone-input', // Adjust to match the actual class of your input field
         'preferredCountries' => array("gb", "fr", "de", "it", "es")
     ));
+
+    // Enqueue a custom script to handle the initialization after the form is loaded
+    wp_enqueue_script('phone_validator_custom', plugins_url('js/custom.js', __FILE__), array('intlTelInput', 'util'), '1.0', true);
 }
 
 // Hook the function into WordPress
