@@ -1,36 +1,25 @@
 <?php
-/**
-*Plugin Name: Phone Validator
-*Description: A simple phone input validator
-*Version: 1.0
-*Author: MVW Development
+/*
+Plugin Name: Phone Validation Plugin
+Description: Validates phone numbers using the intlTelInput library.
+Version: 1.0
+Author: Your Name
 */
 
-function phone_validator_enqueue_scripts() {
-    // Check if jQuery is loaded
-    if (!wp_script_is('jquery', 'enqueued')) {
-        // If not, enqueue jQuery first
-        wp_enqueue_script('jquery');
-    }
-
-    // Enqueue intlTelInput.min.js with jQuery as a dependency
-    wp_enqueue_script('intlTelInput', plugins_url('js/intlTelInput.min.js', __FILE__), array('jquery'), '1.0', true);
-
-    // Enqueue util.js with intlTelInput as a dependency
-    wp_enqueue_script('util', plugins_url('js/utils.js', __FILE__), array('intlTelInput'), '1.0', true);
-
-    // Localize the script to pass parameters to JavaScript
-    wp_localize_script('intlTelInput', 'intlTelInputConfig', array(
-        'inputClass' => 'phone-input', // Adjust to match the actual class of your input field
-        'preferredCountries' => array("gb", "fr", "de", "it", "es")
-    ));
-
-    // Enqueue a custom script to handle the initialization after the form is loaded
-    wp_enqueue_script('phone_validator_custom', plugins_url('js/custom.js', __FILE__), array('intlTelInput', 'util'), '1.0', true);
+function enqueue_phone_validation_scripts() {
+    wp_enqueue_script( 'intl-tel-input', plugin_dir_url( __FILE__ ) . 'js/intlTelInput.min.js', array( 'jquery' ), '1.0', true );
+    wp_enqueue_script( 'phone-validation', plugin_dir_url( __FILE__ ) . 'js/phone-validation.js', array( 'jquery', 'intl-tel-input' ), '1.0', true );
 }
+add_action( 'wp_enqueue_scripts', 'enqueue_phone_validation_scripts' );
 
-// Hook the function into WordPress
-add_action('wp_enqueue_scripts', 'phone_validator_enqueue_scripts');
+function add_phone_input_field() {
+    echo '<div class="form-group">';
+    echo '<label for="daytimeTelephoneNumber">Phone</label>';
+    echo '<input type="tel" class="form-control" name="daytimeTelephoneNumber" id="daytimeTelephoneNumber" aria-describedby="phone-error" required>';
+    echo '<div id="phone-error" style="color: red;"></div>';
+    echo '</div>';
+}
+add_action( 'wp_footer', 'add_phone_input_field' );
 
 /*
 
