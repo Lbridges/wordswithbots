@@ -3,16 +3,17 @@
  * Plugin Name: Phone Validator
  * Description: A simple phone input validator.
  * Version: 1.0
- * Author: Your Name
+ * Author: MVW Development
  */
 
 // Enqueue JavaScript files
 function phone_validator_enqueue_scripts() {
-    // Enqueue intlTelInput.min.js in the footer
+    // Enqueue util.js
+    wp_enqueue_script('util', plugins_url('js/utils.js', __FILE__), array(), '1.0', true);
+
+    // Enqueue intlTelInput.min.js 
     wp_enqueue_script('intlTelInput', plugins_url('js/intlTelInput.min.js', __FILE__), array(), '1.0', true);
 
-    // Enqueue util.js in the footer with 'intlTelInput' as a dependency
-    wp_enqueue_script('util', plugins_url('js/util.js', __FILE__), array('intlTelInput'), '1.0', true);
 }
 
 // Hook the function into WordPress
