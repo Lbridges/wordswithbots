@@ -21,7 +21,7 @@ function phone_validator_enqueue_scripts() {
 
     // Localize the script to pass parameters to JavaScript
     wp_localize_script('intlTelInput', 'intlTelInputConfig', array(
-        'inputField' => '#kb_field__dd1339-e6_4', // Adjust to match the actual ID of your input field
+        'inputClass' => 'phone-input', // Adjust to match the actual class of your input field
         'preferredCountries' => array("gb", "fr", "de", "it", "es")
     ));
 }
@@ -29,11 +29,10 @@ function phone_validator_enqueue_scripts() {
 // Hook the function into WordPress
 add_action('wp_enqueue_scripts', 'phone_validator_enqueue_scripts');
 
-
 /*
 
 // Modified JavaScript
-const inputField = document.querySelector(intlTelInputConfig.inputField);
+const inputField = document.querySelector(`.${intlTelInputConfig.inputClass}`);
 const iti = window.intlTelInput(inputField, {
     utilsScript: intlTelInputConfig.utilsScript,
     preferredCountries: intlTelInputConfig.preferredCountries
