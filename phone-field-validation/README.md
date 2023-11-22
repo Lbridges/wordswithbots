@@ -2,11 +2,9 @@
 
 **
 Plugin Name:** Phone Validation Plugin  
-Plugin URI: https://example.com/phone-validation-plugin  
 Description: A simple plugin to validate phone numbers using International Telephone Input.  
 Version: 1.0.0  
-Author: Bard  
-Author URI: https://example.com  
+Author: MVW Dev, Bard Optimized
 License: GPLv2 or later  
 **
 ## Description:  
@@ -41,7 +39,7 @@ Submit button is disabled until all required fields, including the phone number,
         <input type="tel" id="phone">  
         <span id="phoneError"></span>  
         <br>  
-        <button type="submit">Submit</button>  
+        <button type="submit" disabled>Submit</button>  
       </form>  
 
 ### Additional Notes:
