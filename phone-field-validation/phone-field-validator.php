@@ -1,28 +1,53 @@
 <?php
+
 /*
 Plugin Name: Phone Validation Plugin
-Description: Validates phone numbers using the intlTelInput library.
-Version: 1.0
-Author: Your Name
+Plugin URI: https://example.com/phone-validation-plugin
+Description: A simple plugin to validate phone numbers using International Telephone Input.
+Version: 1.0.0
+Author: Bard
+Author URI: https://example.com
+License: GPLv2 or later
 */
 
-function enqueue_phone_validation_scripts() {
-    wp_enqueue_script( 'intl-tel-input', plugin_dir_url( __FILE__ ) . 'js/intlTelInput.min.js', array( 'jquery' ), '1.0', true );
-    wp_enqueue_script( 'phone-validation', plugin_dir_url( __FILE__ ) . 'js/phone-validation.js', array( 'jquery', 'intl-tel-input' ), '1.0', true );
-}
-add_action( 'wp_enqueue_scripts', 'enqueue_phone_validation_scripts' );
+// Enqueue necessary scripts
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_script('intl-tel-input', plugins_url('/js/intlTelInput.min.js', __FILE__), array('jquery'), '1.0.0', true);
+    wp_enqueue_script('utils', plugins_url('/js/utils.js', __FILE__), array('jquery'), '1.0.0', true);
+});
 
-function add_phone_input_field() {
-    echo '<div class="form-group">';
-    echo '<label for="daytimeTelephoneNumber">Phone</label>';
-    echo '<input type="tel" class="form-control" name="daytimeTelephoneNumber" id="daytimeTelephoneNumber" aria-describedby="phone-error" required>';
-    echo '<div id="phone-error" style="color: red;"></div>';
-    echo '</div>';
-}
-add_action( 'wp_footer', 'add_phone_input_field' );
+// Initialize International Telephone Input on existing form
+add_action('wp_footer', function() {
+    ?>
+    <script>
+        jQuery(document).ready(function($) {
+            // Select the existing form element
+            var formElement = $('#your-form-id');
+
+            // Initialize International Telephone Input for the phone input field
+            var phoneInput = formElement.find('input[type="tel"]');
+            var iti = utils.getITIPhoneInput(phoneInput);
+
+            // Validate phone number on form submission
+            formElement.submit(function(e) {
+                e.preventDefault();
+
+                if (!iti.isValidNumber()) {
+                    alert('Please enter a valid phone number.');
+                    return false;
+                }
+
+                // Submit the form here
+                console.log('Phone number:', iti.getNumber());
+            });
+        });
+    </script>
+    <?php
+});
+
 
 /*
-
+----------------------------------------------------------------------
 // Modified JavaScript
 const inputField = document.querySelector(`.${intlTelInputConfig.inputClass}`);
 const iti = window.intlTelInput(inputField, {
