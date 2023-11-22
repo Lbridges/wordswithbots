@@ -44,27 +44,78 @@ add_action('wp_footer', function() {
     </script>
     <?php
 });
+----------------------------------------------------------------
+//MAIN SCRIPT 
+jQuery(document).ready(function($) {
+    // Initialize International Telephone Input
+    var iti = utils.getITIPhoneInput($('#phone'));
+    var phoneError = $('#phoneError');
+    var input = $('#phone');
 
+    // Enable submit button only when all required fields are valid
+    function updateSubmitButtonState() {
+        var nameIsValid = $('#name').val() !== '';
+        var emailIsValid = $('#email').val() !== '';
+        var phoneIsValid = iti.isValidNumber();
+
+        if (nameIsValid && emailIsValid && phoneIsValid) {
+            $('#phone-validation-form button').prop('disabled', false);
+        } else {
+            $('#phone-validation-form button').prop('disabled', true);
+        }
+    }
+
+    // Validate phone number on form submission
+    $('#phone-validation-form').submit(function(e) {
+        e.preventDefault();
+
+        if (!iti.isValidNumber()) {
+            phoneError.textContent = 'Invalid phone number';
+            input.classList.add('error');
+            input.focus();
+            return false;
+        }
+
+        // Submit the form here
+        console.log('Phone number:', iti.getNumber());
+    });
+
+    // Validate phone number on blur
+    input.addEventListener('blur', function() {
+        if (!iti.isPossibleNumber()) {
+            phoneError.textContent = 'Invalid phone number';
+            input.classList.add('error');
+        } else {
+            phoneError.textContent = '';
+            input.classList.remove('error');
+        }
+
+        updateSubmitButtonState();
+    });
+
+    // Validate other required fields on blur
+    $('#name').on('blur', updateSubmitButtonState);
+    $('#email').on('blur', updateSubmitButtonState);
+
+    // Initial validation to set submit button state
+    updateSubmitButtonState();
+});
 
 /*
 ----------------------------------------------------------------------
-// Modified JavaScript
-const inputField = document.querySelector(`.${intlTelInputConfig.inputClass}`);
-const iti = window.intlTelInput(inputField, {
-    utilsScript: intlTelInputConfig.utilsScript,
-    preferredCountries: intlTelInputConfig.preferredCountries
-});
 
-const phoneError = document.getElementById('phone-error');
+This updated code incorporates the following best practices:
 
-function validatePhone() {
-    if (!iti.isPossibleNumber()) {
-        phoneError.textContent = 'Invalid phone number';
-        inputField.classList.add('error');
-    }
-}
+Client-side validation: The validation logic is performed on the client-side, providing immediate feedback to the user without the need for page reloads.
 
-inputField.addEventListener('blur', validatePhone);
+Incremental validation: The validation is performed incrementally as the user fills out the form, ensuring that fields are validated before the submit button is enabled.
+
+Submit button control: The submit button is disabled initially and only enabled when all required fields are valid, preventing form submission with incomplete or invalid data.
+
+User-friendly experience: The plugin provides clear error messages and updates the submit button state dynamically, guiding the user through the form completion process.
+
+Modular design: The plugin is designed as a separate module, allowing it to be easily integrated into existing forms without affecting other functionalities.
+
 
 
 Given the requirement of sharing the phone field validation method across multiple sites with different themes, using a plugin becomes a sensible approach. A plugin allows for a modular and portable solution that can be easily implemented on various WordPress installations.
