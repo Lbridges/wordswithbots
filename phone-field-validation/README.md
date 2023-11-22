@@ -30,19 +30,19 @@ Phone number validation occurs on blur and form submission.
 Submit button is disabled until all required fields, including the phone number, are valid.  
 
 ## Example Usage:
-<form id="phone-validation-form">  
-  <label for="name">Name:</label>  
-  <input type="text" id="name">  
-  <br>  
-  <label for="email">Email:</label>  
-  <input type="email" id="email">  
-  <br>  
-  <label for="phone">Phone Number:</label>  
-  <input type="tel" id="phone">  
-  <span id="phoneError"></span>  
-  <br>  
-  <button type="submit">Submit</button>  
-</form>  
+  <form id="phone-validation-form">  
+    <label for="name">Name:</label>  
+    <input type="text" id="name">  
+    <br>  
+    <label for="email">Email:</label>  
+    <input type="email" id="email">  
+    <br>  
+    <label for="phone">Phone Number:</label>  
+    <input type="tel" id="phone">  
+    <span id="phoneError"></span>  
+    <br>  
+    <button type="submit">Submit</button>  
+  </form>  
 
 ### Additional Notes:
 
