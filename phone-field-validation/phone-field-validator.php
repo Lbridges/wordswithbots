@@ -24,7 +24,8 @@ add_action('wp_enqueue_scripts', function() {
         wp_enqueue_script('utils', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/utils.js', array('jquery'), '1.0.0', true);
 
         // Enqueue the separate JavaScript file
-        wp_enqueue_script('phone-validation-script', get_template_directory_uri() . '/js/phone-validation.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('phone-validation-script', plugins_url('/js/phone-validation.js', __FILE__), array('jquery'), '1.0.0', true);
+
     }
 });
 
