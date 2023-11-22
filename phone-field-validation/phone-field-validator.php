@@ -10,10 +10,22 @@ Author URI: https://example.com
 License: GPLv2 or later
 */
 
-// Enqueue necessary scripts
+// Conditionally enqueue the necessary styles and scripts
 add_action('wp_enqueue_scripts', function() {
-    wp_enqueue_script('intl-tel-input', plugins_url('/js/intlTelInput.min.js', __FILE__), array('jquery'), '1.0.0', true);
-    wp_enqueue_script('utils', plugins_url('/js/utils.js', __FILE__), array('jquery'), '1.0.0', true);
+    // Check if the target form element exists
+    $formElement = $('#your-form-id');
+
+    if ($formElement) {
+        // Enqueue necessary styles
+        wp_enqueue_style('intl-tel-input-css', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/css/intlTelInput.css');
+
+        // Enqueue necessary scripts
+        wp_enqueue_script('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/intlTelInput.min.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('utils', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/utils.js', array('jquery'), '1.0.0', true);
+
+        // Enqueue the separate JavaScript file
+        wp_enqueue_script('phone-validation-script', get_template_directory_uri() . '/js/phone-validation.js', array('jquery'), '1.0.0', true);
+    }
 });
 
 // Initialize International Telephone Input on existing form
@@ -44,6 +56,7 @@ add_action('wp_footer', function() {
     </script>
     <?php
 });
+
 ----------------------------------------------------------------
 //MAIN SCRIPT 
 jQuery(document).ready(function($) {
