@@ -1,3 +1,5 @@
+# Phone Validation Plugin
+
 **
 Plugin Name:** Phone Validation Plugin
 Plugin URI: https://example.com/phone-validation-plugin
@@ -10,26 +12,25 @@ License: GPLv2 or later
 Description:
 This plugin provides real-time validation of phone numbers using International Telephone Input. It ensures that users enter valid phone numbers before submitting forms.
 
-Features:
-
+## Features:
 Real-time phone number validation using International Telephone Input
 Conditional resource loading to improve page load performance
 Submit button control based on phone number validity and other required fields
 User-friendly error messages and visual feedback
-Installation:
 
+## Installation:
 Upload the plugin folder to your WordPress plugins directory.
 Activate the plugin from the Plugins menu in your WordPress dashboard.
 Add the target form element to your theme or page.
 Customize the phone input field with the appropriate class or ID.
-Usage:
 
+## Usage:
 The plugin automatically initializes International Telephone Input for the specified phone input field.
 Phone number validation occurs on blur and form submission.
 Submit button is disabled until all required fields, including the phone number, are valid.
 
-Example Usage:
-<form id="phone-validation-form">
+## Example Usage:
+`<form id="phone-validation-form">
   <label for="name">Name:</label>
   <input type="text" id="name">
   <br>
@@ -41,9 +42,9 @@ Example Usage:
   <span id="phoneError"></span>
   <br>
   <button type="submit">Submit</button>
-</form>
+</form>`
 
-Additional Notes:
+### Additional Notes:
 
 The plugin works with any theme or page that includes the target form element.
 The plugin can be customized to support additional validation rules and error messages.
@@ -52,11 +53,11 @@ Support:
 
 For any questions or issues related to the plugin, please create a new topic on the WordPress support forums.
 
-Contributing:
+#### Contributing:
 
 We welcome contributions to improve the plugin. Please create a pull request on the GitHub repository.
 
-Credits:
+##### Credits:
 
 International Telephone Input library for phone number formatting and validation
 WordPress community for providing a great platform for plugin development
