@@ -1,0 +1,29 @@
+JavaScript
+// Function to strip special characters from a string
+function stripSpecialChars(text) {
+  // Regular expression to match anything except alphanumeric characters, space, hyphen, and underscore
+  const regex = /[^a-zA-Z0-9\s\-_]/g;
+  return text.replace(regex, "");
+}
+
+// Submit event listener for the form
+document.querySelector("#existing-form").addEventListener('submit', function(event) {
+  validatePhone(); // Validate phone input
+  validateEmail(); // Validate email input
+
+  // If validation passes
+  if (iti.isValidNumber() && document.getElementById('email').checkValidity()) {
+    const formData = new FormData(this); // Get form data
+    
+    // Loop through each form entry and strip special characters from the value
+    for (const [key, value] of formData.entries()) {
+      formData.set(key, stripSpecialChars(value));
+    }
+
+    // Now formData contains data with stripped special characters
+    // Send formData to the server (implementation depends on your server-side technology)
+    // ...
+
+    event.preventDefault(); // Prevent default form submission
+  }
+});
