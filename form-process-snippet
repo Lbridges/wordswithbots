@@ -1,0 +1,76 @@
+<?php
+
+// Function to generate CRM content table
+function generateCRMcontent($postInfo) {
+  $table = "<table>";
+  $table .= "<tr><td>First Name:</td><td>" . $postInfo->firstName . "</td></tr>";
+  $table .= "<tr><td>Last Name:</td><td>" . $postInfo->lastName . "</td></tr>";
+  $table .= "<tr><td>Email:</td><td>" . $postInfo->email . "</td></tr>";
+  $table .= "<tr><td>Phone Number:</td><td>" . $postInfo->phone . "</td></tr>";
+  $table .= "<tr><td>Zip Code:</td><td>" . $postInfo->zipcode . "</td></tr>";
+  $table .= "</table>";
+  return $table;
+}
+
+// Function to write content to a file
+function writeToFile($fileLocation, $content) {
+  $handle = fopen($fileLocation, 'w'); // Open file for writing
+  fwrite($handle, $content); // Write content to file
+  fclose($handle); // Close the file
+}
+
+// Function to save form data as JSON
+function saveToFile($object) {
+  // Generate unique ID
+  $uniqueID = random_int(PHP_INT_MIN, PHP_INT_MAX);
+
+  // Define file path and name
+  $fileLocation = '/user/forms/';
+  $fileName = 'formData' . $uniqueID . '.json';
+  $fullPath = $fileLocation . $fileName;
+
+  // Check and create directory if needed
+  if (!is_dir($fileLocation)) {
+    mkdir($fileLocation, 0777, true); // Create directory with permissions
+  }
+
+  // Check if file exists, append data if it does, otherwise write as new object
+  if (file_exists($fullPath)) {
+    $fileContent = file_get_contents($fullPath);
+    $jsonObject = json_decode($fileContent);
+    $jsonObject[] = $object;
+    $writeContent = json_encode($jsonObject);
+  } else {
+    $writeContent = json_encode($object);
+  }
+
+  writeToFile($fullPath, $writeContent); // Save data to file
+}
+
+// Class for Request Information (optional)
+class RequestInfo {
+  public $firstName;
+  public $lastName;
+  public $email;
+  public $phone;
+  public $zipcode;
+  public $CRMcontent;
+
+  function __construct($postData) {
+    $this->firstName = $postData['firstName'];
+    $this->lastName = $postData['lastName'];
+    $this->email = $postData['email'];
+    $this->phone = $postData['phone'];
+    $this->zipcode = $postData['zipcode'];
+  }
+}
+
+// Function to process form submission
+if (isset($_POST)) {
+
+  // Create RequestInfo object (optional)
+  $jsonInfo = new RequestInfo($_POST);
+
+  // Generate CRM content table
+  $table = generateCRMcontent($jsonInfo);
+  $jsonInfo->CRMcontent = $table
