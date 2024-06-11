@@ -118,4 +118,16 @@ class FormJson {
     $this->CRMcontent = $formData['CRMcontent'];
   }
 }
+// Explanation:
 
+// The if (isset($_POST)) block checks if the form has been submitted.
+// A FormJson class is introduced (optional) to hold the form data in a structured format.
+// The script creates a new FormJson object with all the submitted data.
+// You can replace "label" => $jsonInfo->valueForLabel with a function to dynamically determine the label based on the field name.
+// write_log functions are used for debugging purposes (optional, implement your logging mechanism).
+// The script calls saveToFile to save the $toSave object as a JSON file.
+// Finally, it redirects the user to the confirmation URL specified in the hidden field and terminates the script execution with die().
+// Note:
+
+// This code uses basic file handling and assumes write permissions on the /user/forms/ directory. You might need to adjust permissions or use a different storage method based on your specific needs.
+// The write_log function and RequestInfo class are optional and can be removed if not needed.
