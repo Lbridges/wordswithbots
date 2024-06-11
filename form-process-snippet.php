@@ -73,4 +73,49 @@ if (isset($_POST)) {
 
   // Generate CRM content table
   $table = generateCRMcontent($jsonInfo);
-  $jsonInfo->CRMcontent = $table
+  $jsonInfo->CRMcontent = $table;
+
+  // Create a new FormJson object (optional)
+  $toSave = new FormJson(array(
+    "label" => $jsonInfo->valueForLabel, // Replace with function to get label from field name
+    "firstName" => $jsonInfo->firstName,
+    "lastName" => $jsonInfo->lastName,
+    "email" => $jsonInfo->email,
+    "phone" => $jsonInfo->phone,
+    "zipcode" => $jsonInfo->zipcode,
+    "CRMcontent" => $jsonInfo->CRMcontent
+  ));
+
+  // Log information for debugging (optional)
+  write_log(json_encode($jsonInfo));
+  write_log(json_encode($toSave));
+
+  // Save form data to JSON file
+  saveToFile($toSave);
+
+  // Redirect to confirmation page
+  header('Location: ' . $_POST["confirmationURL"]);
+  die();
+}
+
+// Class for FormJson data (optional)
+class FormJson {
+  public $label;
+  public $firstName;
+  public $lastName;
+  public $email;
+  public $phone;
+  public $zipcode;
+  public $CRMcontent;
+
+  function __construct($formData) {
+    $this->label = $formData['label'];
+    $this->firstName = $formData['firstName'];
+    $lastName = $formData['lastName'];
+    $this->email = $formData['email'];
+    $this->phone = $formData['phone'];
+    $this->zipcode = $formData['zipcode'];
+    $this->CRMcontent = $formData['CRMcontent'];
+  }
+}
+
