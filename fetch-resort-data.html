@@ -53,11 +53,18 @@
         });
     }
     async function getTAdata(taID) {
-        const taURL = "https://api.custom-ta-endpoint/get/";
-        taReviewsURL = taURL + taID;
-        const response = await fetch(taReviewsURL);
-        const taData = await response.json();
-        return taData;
+      const taURL = "https://api.custom-ta-endpoint/get/";
+      taReviewsURL = taURL + taID;
+      const response = await fetch(taReviewsURL);
+      const taData = await response.json();
+    
+      // Check for the actual property name holding the number of reviews
+      let numReviews = taData?.review_count; // Replace with the correct property name
+      if (!numReviews) {
+        numReviews = taData?.data?.review_count; // Alternative location (nested structure)
+      }
+    
+      return { num_reviews: numReviews }; // Return an object with the desired property name
     }
     async function createSliderData(resortData) {
       const sliderImages = [];
