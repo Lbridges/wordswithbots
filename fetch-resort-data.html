@@ -1,79 +1,92 @@
+<!-- ADD SPLIDE DEPENDENCIES TO HEADER SCRIPTS-->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script> -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"> -->
+
 <script>
     async function fetchResortData() {
         //CHANGE THE ENDPOINT FOR EACH RESORT
         // use query param to pass the resort code to the endpoint string
         // let params = new URL(document.location.toString()).searchParams;
         // let resortCode = params.get('rc');
-        // const apiMVW = 'ENDPOINT-NO-BASE-GOES-HERE';
+        // const apiMVW = 'https://api.marriottvacationclubs.com/wp-json/jahia/v1/properties/mvw/';
         // const apiURL = apiMVW.concat(resortCode, '/base');
-        const apiURL = 'FULL-ENDPOINT-GOES-HERE'; //comment this out if using get param
+        const apiURL = 'https://api.marriottvacationclubs.com/wp-json/jahia/v1/properties/mvw/ab/base'; //comment this out if using get param
         const response = await fetch(apiURL);
         const data = await response.json();
         return data;
     }
-   async function updateResortContent(resortData) {
-    const headingElement = document.getElementById('resortTitle');
-    headingElement.textContent = resortData?.resort?.name; // Use optional chaining
-     
-    const description = document.getElementById('description');
-    description.textContent = resortData?.resort?.openGraphDescription; // Use optional chaining
-     
-    // Splide slider logic
-    const mainSliderTrack = document.querySelector('.splide__track ul');
-    const thumbnailSliderTrack = document.querySelector('.splide--thumbnails .splide__track ul');
-    const resortImages = await createSliderData(resortData); // Call createSliderData function
-     
-     
-      resortImages.forEach((image, index) => {
-        const mainSlide = document.createElement('li');
-        mainSlide.classList.add('splide__slide');
-        mainSlide.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
-     
-        const thumbnail = document.createElement('li');
-        thumbnail.classList.add('splide__slide');
-        thumbnail.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
-     
-        mainSliderTrack.appendChild(mainSlide);
-        thumbnailSliderTrack.appendChild(thumbnail);
-      });
-  }
+    async function updateResortContent(resortData) {
+        const headingElement = document.getElementById('resortTitle');
+        headingElement.textContent = resortData?.resort?.name; // Use optional chaining
 
-  async function createSliderData(resortData) {
-   const sliderImages = [];
-   if (resortData?.resort?.gallery) { // Check for gallery existence
-    for (const gallery of resortData.resort.gallery) {
-     for (const image of gallery.images) {
-      if (image.photo && image.photo["16:9"].path) {
-       sliderImages.push({
-        imagePath: image.photo["16:9"].path,
-        altText: image.altText,
-       });
-      }
-     }
-    }
-   }
-   return sliderImages;
-  }
+        // TRIPADVISOR
+        const taReviews = document.getElementById('taReviews');
+        getReviews = await getTAdata(resortData);
+        taReviews.textContent = taData + " reviews";
 
-   
-  function initSliders() {
-    const mainSlider = new Splide('.splide', {
-      type: 'loop',
-      perPage: 1,
-      focus: 'center',
-      arrows: 'always',
-    });
-    mainSlider.mount();
-   
-    const thumbnailSlider = new Splide('.splide--thumbnails', {
-      type: 'loop',
-      perPage: 6,
-      focus: 'center',
-      slideFocus: false,
-      arrows: false,
-    });
-    thumbnailSlider.sync(mainSlider);
-    thumbnailSlider.mount();
-  }
-  fetchResortData().then(updateResortContent).then(() => initSliders());
-</script>
+        const description = document.getElementById('description');
+        description.textContent = resortData?.resort?.openGraphDescription; // Use optional chaining
+
+        // Splide slider logic
+        const mainSliderTrack = document.querySelector('.splide__track ul');
+        const thumbnailSliderTrack = document.querySelector('.splide--thumbnails .splide__track ul');
+        const resortImages = await createSliderData(resortData); // Call createSliderData function
+        
+        resortImages.forEach((image, index) => {
+        const mainSlide = document.createElement('li');
+        mainSlide.classList.add('splide__slide');
+        mainSlide.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
+
+        const thumbnail = document.createElement('li');
+        thumbnail.classList.add('splide__slide');
+        thumbnail.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
+
+        mainSliderTrack.appendChild(mainSlide);
+        thumbnailSliderTrack.appendChild(thumbnail);
+        });
+    }
+    async function getTAdata(resortData) {
+        const taURL = "https://api.CUSTOM-ENDPOINT-GOES-HERE/get/";
+        const taID = resortData?.tripAdvisorId;
+        taReviewsURL = taURL + taID;
+        const response = await fetch(taReviewsURL);
+        const taData = await response.json();
+        return taData;
+    }
+    async function createSliderData(resortData) {
+      const sliderImages = [];
+      if (resortData?.resort?.gallery) { // Check for gallery existence
+        for (const gallery of resortData.resort.gallery) {
+          for (const image of gallery.images) {
+            if (image.photo && image.photo["16:9"].path) {
+              sliderImages.push({
+                imagePath: image.photo["16:9"].path,
+                altText: image.altText,
+              });
+            }
+          }
+        }
+      }
+      return sliderImages;
+    }
+    
+  function initSliders() {
+    const mainSlider = new Splide('.splide', {
+      type: 'loop',
+      perPage: 1,
+      focus: 'center',
+      arrows: 'always',
+    });
+    mainSlider.mount();
+    const thumbnailSlider = new Splide('.splide--thumbnails', {
+      type: 'loop',
+      perPage: 6,
+      focus: 'center',
+      slideFocus: false,
+      arrows: false,
+    });
+    thumbnailSlider.sync(mainSlider);
+    thumbnailSlider.mount();
+  }
+  fetchResortData().then(updateResortContent).then(() => initSliders());
+  </script>
