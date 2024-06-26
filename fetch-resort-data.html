@@ -8,9 +8,9 @@
         // use query param to pass the resort code to the endpoint string
         // let params = new URL(document.location.toString()).searchParams;
         // let resortCode = params.get('rc');
-        // const apiMVW = 'https://api.marriottvacationclubs.com/wp-json/jahia/v1/properties/mvw/';
+        // const apiMVW = 'https://api.ENDPOINT-NO-BASE';
         // const apiURL = apiMVW.concat(resortCode, '/base');
-        const apiURL = 'https://api.marriottvacationclubs.com/wp-json/jahia/v1/properties/mvw/ab/base'; //comment this out if using get param
+        const apiURL = 'https://api.ENDPOINT-WITH-BASE'; //comment this out if using get param
         const response = await fetch(apiURL);
         const data = await response.json();
         return data;
