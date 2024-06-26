@@ -1,0 +1,74 @@
+<script>
+    async function fetchResortData() {
+        //CHANGE THE ENDPOINT FOR EACH RESORT
+        // use query param to pass the resort code to the endpoint string
+        // let params = new URL(document.location.toString()).searchParams;
+        // let resortCode = params.get('rc');
+        // const apiMVW = 'ENDPOINT-NO-BASE-GOES-HERE';
+        // const apiURL = apiMVW.concat(resortCode, '/base');
+        const apiURL = 'FULL-ENDPINT-GOES-HERE'; //comment this out if using get param
+        const response = await fetch(apiURL);
+        const data = await response.json();
+        return data;
+    }
+    async function updateResortContent(resortData) {
+        const headingElement = document.getElementById('resortTitle');
+        headingElement.textContent = resortData.resort.name;
+
+        const description = document.getElementById('description');
+        description.textContent = resortData.resort.openGraphDescription;
+
+        //splide slider
+        const mainSliderTrack = document.querySelector('.splide__track ul');
+        const thumbnailSliderTrack = document.querySelector('.splide--thumbnails .splide__track ul');
+        const resortImages = [];
+
+        for (const gallery of resortData.resort.gallery) {
+            if(resortData.resort.gallery != '') {
+                for (const image of gallery.images) {
+                    if(image.photo && image.photo["16:9"].path) {
+                        resortImages.push({
+                            imagePath: image.photo["16:9"].path,
+                            altText: image.altText,
+                        });
+                    }
+                }
+            }
+        }
+        return resortImages;
+
+        resortImages.forEach((image, index) => {
+            const mainSlide = document.createElement('li');
+            mainSlide.classList.add('splide__slide');
+            mainSlide.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
+
+            const thumbnail = document.createElement('li');
+            thumbnail.classList.add('splide__slide');
+            thumbnail.innerHTML = `<img src="${image.imagePath}" alt="${image.altText}">`;
+
+            mainSliderTrack.appendChild(mainSlide);
+            thumbnailSliderTrack.appendChild(thumbnail);
+        });
+    }
+
+    function initSliders() {
+        const mainSlider = new Splide('.splide', {
+            type: 'loop',
+            perPage: 1,
+            focus: 'center',
+            arrows: 'always',
+        });
+        mainSlider.mount();
+
+        const thumbnailSlider = new Splide('.splide--thumbnails', {
+            type: 'loop',
+            perPage: 6,
+            focus: 'center',
+            slideFocus: false,
+            arrows: false,
+        });
+        thumbnailSlider.sync(mainSlider);
+        thumbnailSlider.mount();
+    }
+    fetchResortData().then(updateResortContent).then(() => initSliders());
+</script>
