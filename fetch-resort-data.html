@@ -20,14 +20,14 @@
         headingElement.textContent = resortData?.resort?.name; // Use optional chaining
 
         // TRIPADVISOR
-    const taReviews = document.getElementById('taReviews');
-        if (resortData?.tripAdvisorId) { // Check for tripAdvisorId existence
-            getReviews = await getTAdata(resortData);
-            taReviews.textContent = taData + " reviews";
-        } else {
-            // Handle the case where tripAdvisorId is missing (e.g., display a message)
-            taReviews.textContent = "No TripAdvisor reviews available";
-    }
+        const taReviews = document.getElementById('taReviews');
+            if (resortData?.tripAdvisorId) { // Check for tripAdvisorId existence
+                getReviews = await getTAdata(resortData);
+                taReviews.textContent = taData + " reviews";
+            } else {
+                // Handle the case where tripAdvisorId is missing (e.g., display a message)
+                taReviews.textContent = "No TripAdvisor reviews available";
+        }
 
         const description = document.getElementById('description');
         description.textContent = resortData?.resort?.openGraphDescription; // Use optional chaining
