@@ -1,15 +1,10 @@
-<!-- ADD SPLIDE DEPENDENCIES TO HEADER SCRIPTS-->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script> -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"> -->
-
-<!-- footer script -->
 <script>
     async function fetchResortData() {
         //CHANGE THE ENDPOINT FOR EACH RESORT
         // use query param to pass the resort code to the endpoint string
         // let params = new URL(document.location.toString()).searchParams;
         // let resortCode = params.get('rc');
-        // const apiMVW = 'https://api.custom-endpoint-no-base/';
+        // const apiMVW = 'https://api.custom-endpoint-no-base';
         // const apiURL = apiMVW.concat(resortCode, '/base');
         const apiURL = 'https://api.custom-endpoint-with-base/base'; //comment this out if using get param
         try {
@@ -20,7 +15,6 @@
             console.error("Error fetching resort data:", error );
         }
     }
-        
     async function updateResortContent(resortData) {
         const headingElement = document.getElementById('resortTitle');
         headingElement.textContent = resortData?.resort?.name; // Use optional chaining
@@ -31,7 +25,7 @@
                 taID = resortData?.resort?.tripAdvisorId;
                 console.log("tripadvisor ID" + taID);
                 getReviews = await getTAdata(taID);
-                taReviews.textContent = taData?.num_reviews + " reviews"; 
+                taReviews.textContent = numReviews + " reviews"; 
             } else {
                 // Handle the case where tripAdvisorId is missing (e.g., display a message)
                 taReviews.textContent = "No TripAdvisor reviews available";
@@ -59,7 +53,7 @@
         });
     }
     async function getTAdata(taID) {
-        const taURL = "https://api.custom-trip-advisor-endpoint/get/";
+        const taURL = "https://api.custom-endpoint/get/";
         taReviewsURL = taURL + taID;
         const response = await fetch(taReviewsURL);
         const taData = await response.json();
@@ -70,7 +64,7 @@
             numReviews = 0;
         }
         
-        return { num_reviews: numReviews }; 
+        return numReviews; 
     }
     async function createSliderData(resortData) {
       const sliderImages = [];
