@@ -31,7 +31,7 @@
                 taID = resortData?.resort?.tripAdvisorId;
                 console.log("tripadvisor ID" + taID);
                 getReviews = await getTAdata(taID);
-                taReviews.textContent = num_reviews + " reviews"; 
+                taReviews.textContent = taData?.num_reviews + " reviews"; 
             } else {
                 // Handle the case where tripAdvisorId is missing (e.g., display a message)
                 taReviews.textContent = "No TripAdvisor reviews available";
