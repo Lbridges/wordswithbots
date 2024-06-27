@@ -12,10 +12,15 @@
         // const apiMVW = 'https://api.custom-endpoint-no-base/';
         // const apiURL = apiMVW.concat(resortCode, '/base');
         const apiURL = 'https://api.custom-endpoint-with-base/base'; //comment this out if using get param
-        const response = await fetch(apiURL);
-        const data = await response.json();
-        return data;
+        try {
+            const response = await fetch(apiURL);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error fetching resort data:', error );
+        }
     }
+        
     async function updateResortContent(resortData) {
         const headingElement = document.getElementById('resortTitle');
         headingElement.textContent = resortData?.resort?.name; // Use optional chaining
@@ -26,8 +31,7 @@
                 taID = resortData?.resort?.tripAdvisorId;
                 console.log("tripadvisor ID" + taID);
                 getReviews = await getTAdata(taID);
-                taReviews.textContent = num_reviews + " reviews"; // there was a taData reference on this line, but it was removed for causing an error
-                //retrieving the reviews number here is failing
+                taReviews.textContent = num_reviews + " reviews"; 
             } else {
                 // Handle the case where tripAdvisorId is missing (e.g., display a message)
                 taReviews.textContent = "No TripAdvisor reviews available";
@@ -55,7 +59,6 @@
         });
     }
     async function getTAdata(taID) {
-        //taID represents the string that should be passed to this function to create the full url for the trip advisor endpoint
         const taURL = "https://api.custom-trip-advisor-endpoint/get/";
         taReviewsURL = taURL + taID;
         const response = await fetch(taReviewsURL);
@@ -64,7 +67,7 @@
         // Check for the actual property name holding the number of reviews
         let numReviews = taData?.num_reviews; 
         if (!numReviews) {
-            numReviews = taData?.data?.num_reviews;
+            numReviews = 0;
         }
         
         return { num_reviews: numReviews }; 
