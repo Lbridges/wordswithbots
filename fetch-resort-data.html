@@ -33,7 +33,46 @@
                     document.getElementById('taRow').style.display = 'none';
                 }
         }
-
+        // Amenities/Activities
+          const amenitiesContainer = document.getElementById('amenities');
+          const activityTags = resortData?.resort?.activityTags || []; // Use default empty array if missing
+        
+          let amenityCount = 0;
+          amenitiesContainer.innerHTML = ""; // Clear existing content
+        
+          activityTags.forEach((activityTag) => {
+            if (amenityCount < 10) { // Show maximum 10 amenities initially
+              const amenityIcon = document.createElement('img');
+              const amenityName = document.createElement('p');
+        
+              const iconData = activityTag?.activityTagIconImage?.photo?.["5:4"]; // Assuming 5:4 aspect ratio
+              if (iconData) {
+                amenityIcon.src = iconData.path;
+                amenityIcon.alt = activityTag?.activityTagIconImage?.altText;
+              }
+        
+              amenityName.textContent = activityTag.nodename;
+        
+              amenitiesContainer.appendChild(amenityIcon);
+              amenitiesContainer.appendChild(amenityName);
+        
+              amenityCount++;
+            }
+          });
+        
+          if (activityTags.length > 10) {
+            const showAllButton = document.createElement('button');
+            showAllButton.textContent = "Show all amenities";
+            showAllButton.addEventListener('click', () => {
+              // Toggle visibility of all activities on click
+              amenitiesContainer.querySelectorAll('img, p').forEach((element) => {
+                element.style.display = 'block';
+              });
+              showAllButton.style.display = 'none'; // Hide the button after revealing all
+            });
+        
+            amenitiesContainer.appendChild(showAllButton);
+          }
         const description = document.getElementById('description');
         description.textContent = resortData?.resort?.openGraphDescription; // Use optional chaining
 
