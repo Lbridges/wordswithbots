@@ -4,9 +4,9 @@
         // use query param to pass the resort code to the endpoint string
         // let params = new URL(document.location.toString()).searchParams;
         // let resortCode = params.get('rc');
-        // const apiMVW = 'https://api.custom-endpoint-no-base';
+        // const apiMVW = 'https://api.custom-endpint';
         // const apiURL = apiMVW.concat(resortCode, '/base');
-        const apiURL = 'https://api.custom-endpoint-with-base/base'; //comment this out if using get param
+        const apiURL = 'https://api.custom-endpoint/base'; //comment this out if using get param
         try {
             const response = await fetch(apiURL);
             const data = await response.json();
@@ -21,13 +21,17 @@
 
         // TRIPADVISOR
         const taReviews = document.getElementById('taReviews');
+        const taRatingImg = document.querySelector('#taRating img');
             if (resortData?.resort?.tripAdvisorId) { // Check for tripAdvisorId existence
                 taID = resortData?.resort?.tripAdvisorId;
-                numReviews = await getTAdata(taID);
-                taReviews.textContent = numReviews + " reviews"; 
-            } else {
-                // Handle the case where tripAdvisorId is missing (e.g., display a message)
-                taReviews.textContent = "No TripAdvisor reviews available";
+                const tripAdvisorData = await getTAdata(taID);
+
+                if (tripAdvisorData) {
+                    taReviews.textContent = tripAdvisorData.numReviews + " reviews";
+                    taRatingImg.src = tripAdvisorData.ratingImageURL;
+                } else {
+                    document.getElementById('taRow').style.display = 'none';
+                }
         }
 
         const description = document.getElementById('description');
@@ -57,13 +61,18 @@
         const response = await fetch(taReviewsURL);
         const taData = await response.json();
         
-        // Check for the actual property name holding the number of reviews
-        let numReviews = taData?.num_reviews; 
-        if (!numReviews) {
-            numReviews = 0;
+        // Check for the actual property names holding data
+        const numReviews = taData?.num_reviews;
+        const ratingImageURL = taData?.rating_image_url;
+
+        if (!numReviews || !ratingImageURL) {
+            return null;
         }
-        
-        return numReviews; 
+        return {
+            numReviews,
+            ratingImageURL,
+        };
+         
     }
     async function createSliderData(resortData) {
       const sliderImages = [];
@@ -92,7 +101,7 @@
     mainSlider.mount();
     const thumbnailSlider = new Splide('.splide--thumbnails', {
       type: 'loop',
-      perPage: 6,
+      perPage: 4,
       focus: 'center',
       slideFocus: false,
       arrows: false,
