@@ -23,8 +23,7 @@
         const taReviews = document.getElementById('taReviews');
             if (resortData?.resort?.tripAdvisorId) { // Check for tripAdvisorId existence
                 taID = resortData?.resort?.tripAdvisorId;
-                console.log("tripadvisor ID" + taID);
-                getReviews = await getTAdata(taID);
+                numReviews = await getTAdata(taID);
                 taReviews.textContent = numReviews + " reviews"; 
             } else {
                 // Handle the case where tripAdvisorId is missing (e.g., display a message)
