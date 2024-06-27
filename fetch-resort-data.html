@@ -2,13 +2,14 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script> -->
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"> -->
 
+<!-- footer script -->
 <script>
     async function fetchResortData() {
         //CHANGE THE ENDPOINT FOR EACH RESORT
         // use query param to pass the resort code to the endpoint string
         // let params = new URL(document.location.toString()).searchParams;
         // let resortCode = params.get('rc');
-        // const apiMVW = 'https://custom-endpoint-no-base';
+        // const apiMVW = 'https://api.custom-endpoint-no-base/';
         // const apiURL = apiMVW.concat(resortCode, '/base');
         const apiURL = 'https://api.custom-endpoint-with-base/base'; //comment this out if using get param
         const response = await fetch(apiURL);
@@ -25,7 +26,8 @@
                 taID = resortData?.resort?.tripAdvisorId;
                 console.log("tripadvisor ID" + taID);
                 getReviews = await getTAdata(taID);
-                taReviews.textContent = taData?.num_reviews + " reviews";
+                taReviews.textContent = num_reviews + " reviews"; // there was a taData reference on this line, but it was removed for causing an error
+                //retrieving the reviews number here is failing
             } else {
                 // Handle the case where tripAdvisorId is missing (e.g., display a message)
                 taReviews.textContent = "No TripAdvisor reviews available";
@@ -53,18 +55,19 @@
         });
     }
     async function getTAdata(taID) {
-      const taURL = "https://api.custom-ta-endpoint/get/";
-      taReviewsURL = taURL + taID;
-      const response = await fetch(taReviewsURL);
-      const taData = await response.json();
-    
-      // Check for the actual property name holding the number of reviews
-      let numReviews = taData?.review_count; // Replace with the correct property name
-      if (!numReviews) {
-        numReviews = taData?.data?.review_count; // Alternative location (nested structure)
-      }
-    
-      return { num_reviews: numReviews }; // Return an object with the desired property name
+        //taID represents the string that should be passed to this function to create the full url for the trip advisor endpoint
+        const taURL = "https://api.custom-trip-advisor-endpoint/get/";
+        taReviewsURL = taURL + taID;
+        const response = await fetch(taReviewsURL);
+        const taData = await response.json();
+        
+        // Check for the actual property name holding the number of reviews
+        let numReviews = taData?.num_reviews; 
+        if (!numReviews) {
+            numReviews = taData?.data?.num_reviews;
+        }
+        
+        return { num_reviews: numReviews }; 
     }
     async function createSliderData(resortData) {
       const sliderImages = [];
